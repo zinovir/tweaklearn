@@ -1,0 +1,219 @@
+\documentclass{article}
+\newcommand{\ct}{\ensuremath{\mathrm{Cost}(x_t,u_t)}}
+\newcommand{\cmax}{\ensuremath{\mathrm{Cost}(x_{t_{\max}},u_{t_{\max}})}}
+\newcommand{\G}{\ensuremath{G(x_t,x_{t-1},u_t)}}
+\newcommand{\Tu}{\ensuremath{T_{u_t}(s'|a,s)}}
+
+\begin{document}
+
+\section*{Optimization Problem}
+
+
+\[
+\min \sum_{t=1}^{t_{\max}} \ct
+\]
+such that
+\[
+G(x_t,x_{t-1},u_t)=0
+\]
+where
+\[
+x_t=\{\pi_t(a|s),q_t(s),V_{t}(s),z_t(s)\} \mbox{ and $u_t$ is the perturbation.}
+\]
+
+We can reformulate this to be
+\[
+J=\sum_{t=1}^{t_{\max}} \ct +\lambda_t \G
+\]
+
+Therefore, we have
+\begin{equation}
+\forall t, 1\leq t\leq t_{\max},   \G=0
+\end{equation}
+
+\begin{equation}\label{eq:general}
+1\leq t\leq t_{\max-1}, \frac{\partial \ct}{\partial x_t}+
+\lambda_t\frac{\partial \G}{\partial x_t}+
+\lambda_{t+1}\frac{\partial G(x_{t+1},x_t,u_{t+1})}{\partial x_t}=0
+\end{equation}
+
+\begin{equation}\label{eq:tmax}
+ \frac{\partial \cmax}{\partial x_{t_{\max}}}+\lambda_{t_{\max}}\frac{ \partial G(x_{t_{\max}} .x_{t_{\max-1}},u_{t_{\max}})} {\partial x_{t_{\max}} }=0
+\end{equation}
+
+\begin{equation}\label{eq:ut}
+1\leq t\leq t_{\max}, \frac{\partial\ct}{\partial u_t}+\lambda_t \frac{\partial \G}{\partial u_t}=0
+\end{equation}
+
+\section*{Instantiations}
+\subsection*{Cost Function}
+We will use the following cost function (which is derived from the KL-rate).
+\begin{equation}
+\ct=\sum_{s,a}\pi_t(a|s)q_t(s)\sum_{s',a'} \Tu \pi_t(a'|s')\log \phi(s',a',s,a)
+\end{equation}
+where
+\[
+\phi(s',a',s,a)=\frac{\Tu \pi_t(a'|s')}{T^*(s'|a,s)\pi^*(a'|s')}.
+\]
+
+\noindent Now
+
+\[
+\forall s, \frac{\partial \ct}{\partial q_t(s)}=\sum_{a}\pi_t(a|s)\sum_{s',a'} \Tu \pi_t(a'|s')\log \phi(s',a',s,a)
+\]
+
+%%% NOMAD CHANGES 
+%\[
+%\forall s, a \frac{\partial \ct}{\partial \pi_t(a|s)}= 
+%q_t(s)\sum_{s',a'}\Tu \pi_t(a'|s')\log \phi(s',a',s,a)+
+%q_t(s)T_{u_t}(s|a,s)\pi_t(a|s)(\log \phi(s,a,s,a)+1)
+%\]
+\begin{eqnarray*}
+\forall \bar{s},\bar{a}\ \  \frac{\partial \ct}{\partial \pi_t(\bar{a}|\bar{s})}&=& 
+q_t(\bar{s})\sum_{s',a'}T_{u_t}(s'|\bar{a},\bar{s})\pi_t(a'|s')\log \phi(s',a',\bar{s},\bar{a})+\\
+&&\sum_{s,a}\pi_t(a|s)q_t(s)T_{u_t}(\bar{s}|a,s)(\log \phi(\bar{s},\bar{a},s,a)+1)
+\end{eqnarray*}
+%%% NOMAD CHANGES END
+
+\[
+\frac{\partial \ct}{\partial u_t}=\sum_{s,a}\pi_t(a|s)q_t(s)\sum_{s',a'}\pi_t(a'|s')\left[ \frac{\partial \Tu}{\partial u_t} (\log \phi(s,a,s',a')+1) \right]
+\]
+
+Note that $\frac{\partial \ct}{\partial V_t(s)}=0$ and $\frac{\partial \ct}{\partial z_t(s)}=0$.
+
+\subsection*{The Function \G}
+We can define \G as we wish.
+For this case, we use the following to define \G
+
+\[
+G1(V_t,s)=\sum_a\sum_{s'} \Tu\pi_{t-1}(a|s)\left[C(s',a,s)+\gamma V_t(s')\right]-V_t(s)=0
+\]
+
+\[
+G2(\pi_t,a,s)=\frac{1}{z_t(s)}\mathrm{exp}(\tau_t\sum_{s'}\Tu \left[C(s',a,s)+\gamma V_t(s')\right]-\pi_t(a|s)=0
+\]
+
+\[
+G3(z_t,s)=\sum_a\mathrm{exp}(\tau_t\sum_{s'}\Tu\left[C(s',a,s)+\gamma V(s')\right])-z_t(s)=0
+\]
+
+\[
+G4(q_t,s')=\sum_s\sum_a \Tu\pi_t(a|s)q_t(s)-q_t(s')=0
+\]
+
+We now need to take the partial derivatives of each $Gi$ with respect to $x_t$, $x_{t-1}$ and $u_t$.
+
+\subsubsection*{Partial Derivatives of $G1$}
+
+\[
+\frac{\partial G1(V_t,s)}{\partial \pi_t(a|s)}=0
+\]
+\[
+\frac{\partial G1(V_t,s)}{\partial \pi_{t-1}(a|s)}=\sum_{s'}T_u(s'|a,s)\left[C(s',a,s)+\gamma V_t(s')\right]
+\]
+\[
+\frac{\partial G1(V_t,s)}{\partial q_t(s)}=0
+\]
+
+\[
+\frac{\partial G1(V_t,s)}{\partial z_t(s)}=0
+\]
+
+\[
+\frac{\partial G1(V_t,s)}{\partial V_t(s)}=\sum_a T_{u_t}(s|a,s)\pi_{t-1}(a|s)\gamma -1
+\]
+
+\[
+\frac{\partial G1(V_t,s)}{\partial u_t} = \sum_a\sum_{s'} \frac{\partial \Tu}{\partial u_t}\pi_{t-1}(a|s)\left[C(s',a,s)+\gamma V_t(s')\right]
+\]
+\subsubsection*{Partial Derivatives of $G2$}
+
+\[
+\frac{\partial G2(\pi_t,a,s)}{\partial \pi_t(a|s)} = -1
+\]
+
+\[
+\frac{\partial G2(\pi_t,a,s)}{\partial \pi_{t-1}(a|s)} =0
+\]
+\[
+\frac{\partial G2(\pi_t,a,s)}{\partial q_t(s)} =0
+\]
+\[
+\frac{\partial G2(\pi_t,a,s)}{\partial z_t(s)} =-\frac{1}{z_t(s)^2}\mathrm{exp}(\tau_t\sum_{s'}\Tu \left[C(s',a,s)+\gamma V_t(s')\right]
+\]
+
+\[
+\frac{\partial G2(\pi_t,a,s)}{\partial V_t(s)} = \frac{\tau_t \gamma T_{u_t}(s|a,s) }{z_t(s)}\mathrm{exp}(\tau_t\sum_{s'}T_{u_t}(s'|a,s)\left[C(s',a,s)+\gamma V_t(s')\right])
+\]
+
+\[
+\frac{\partial G2(\pi_t,a,s)}{\partial u_t} = \frac{1}{z_t(s)} \left[\tau_t  \sum_{s'}\frac{\partial \Tu}{\partial u_t}(C(s',a,s)+\gamma V_t(s'))\right]\mathrm{exp}(\tau_t\sum_{s'}T_{u_t}(s'|a,s)\left[C(s',a,s)+\gamma V_t(s')\right])
+\]
+
+\subsubsection*{Partial Derivatives of $G3$}
+
+\[
+\frac{\partial G3(z_t,s)}{\partial \pi_t(a|t)}=0
+\]
+\[
+\frac{\partial G3(z_t,s)}{\partial \pi_{t-1}(a|t)}=0
+\]
+\[
+\frac{\partial G3(z_t,s)}{\partial q_t(s)}=0
+\]
+\[
+\frac{\partial G3(z_t,s)}{\partial z_t(s)}=-1
+\]
+%(double check the next derivative please)
+\[
+\frac{\partial G3(z_t,s)}{\partial V_t(s)}=\sum_a \tau_t T_{u_t}(s|a,s)\gamma \mathrm{exp}(\tau_t \sum_{s'}\Tu (C(s',a,s)+\gamma V_t(s'))
+\]
+
+\[
+\frac{\partial G3(z_t,s)}{\partial u_t}
+=\sum_a ( \tau_t \left\{\sum_{s'}\frac{\partial \Tu}{\partial u_t}[C(s',a,s)+\gamma V_t(s')]\right\})\mathrm{exp}
+(  \tau_t\sum_{s'}\Tu [C(s',a,s)+\gamma V(s')] )
+\]
+
+
+\subsubsection*{Partial Derivatives of $G4$}
+
+\[
+\frac{\partial G4(q_t,s')}{\partial \pi_t(a|s)}=\Tu q_t(s), \forall s'
+\]
+
+\[
+\frac{\partial G4(q_t,s')}{\partial \pi_{t-1}(a|s)}= 0 
+\]
+
+\[
+\frac{\partial G4(q_t,s')}{z_t(s)}= 0 
+\]
+\[
+\frac{\partial G4(q_t,s')}{\partial V_t(s)}= 0 
+\]
+\[
+\frac{\partial G4(q_t,s')}{\partial q_t(s')}=  \sum_a T_{u_t}(s'|s',a)\pi_t(a|s')-1
+\]
+
+\[
+\frac{\partial G4(q_t,s')}{\partial u_t}=\sum_s\sum_a \frac{\partial \Tu }{\partial u_t} \pi_t(a|s)q_t(s)
+\]
+
+%\section*{Expanding the Equations}
+%%%%%%%%%%%%%%%%%%%%%
+
+%We will try to expand and instantiate Equation~\ref{eq:tmax}.
+
+%We start with Equation~\ref{eq:tmax}($q_t(\bar{s})$).
+%\begin{eqnarray*}
+%\sum_a \pi_{t_{\max}}(a|\bar{s})\sum_{a',s'}T_{u_{tmax}}(s'|a,\bar{s})\pi_{tmax}(a'|s')\log \phi(s',a',\bar{s},a)+&& \\
+%\lambda_{tmax}(q_t(\bar{s}))\left[ \sum_a T_{u_{tmax}}(\bar{s}|\bar{s},a)\pi_{tmax}(a|\bar{s})-1\right]&=&0
+%\end{eqnarray*}
+
+%Equation~\ref{eq:tmax}($z_t(\bar{s})$)
+%\begin{eqnarray*}
+%\sum_a\lambda_{tmax}(\pi_t,a,\bar{s})\left(\frac{-1}{z_{tmax}(\bar{s})^2} \mathrm{exp}(\tau_{tmax}\sum_{s'}T_{u_{tmax}}(s'|a,\bar{s})\left[C(s',a,\bar{s})+\gamma V_{tmax}(s')\right]\right)-\lambda_{tmax}(z_t,\bar{s})&=&0
+%\end{eqnarray*}
+
+\end{document}
