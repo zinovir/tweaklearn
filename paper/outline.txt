@@ -1,0 +1,40 @@
+Introduction and Related Work
+
+   * Environment Design (Zhang and Parkes)
+   * Reward Shaping (we should discuss how ED and RL differ or are the same)
+   * Work by Peter Stone and Gal Kaminka ("teaching by example")
+
+   We also need to include a concrete example -- most likely a bike
+   riding example where changes are made to the bike. We need to
+   ensure that the example used matches our problem formulation -- and
+   in particular the cost function.
+
+Model
+
+   This is the most important section.  
+
+   * Describe interaction
+   including agent and teacher's roles and responsibilities. We should
+   emphasize that the teacher may or may not be benevolent/adversarial
+   - that we can capture both (and anything in between)
+   * Specialise to an MDP environment
+   * Describe measure/cost -- in particular the use of KL-rate
+   * Emphasize the generic use of a policy update rule
+
+Optimization Problem (Instantiation)
+
+   * Define the optimize problem and then provide a particular
+     instantiation of it (policy iteration).
+
+Experimental Setup
+
+   * Goals of this section are to show feasibility of our approach and
+     to compare qualitatively with other related approaches
+     (reward-based ones?)
+
+Future Work and Conclusions
+
+   * Variations -- in particular re-emphasize that policy iteration is
+     not required -- just need a policy update rule.  Talk about how
+     it might be useful in transfer learning.
+   * Variations of the cost function (relative difference)
