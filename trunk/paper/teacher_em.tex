@@ -103,7 +103,7 @@ Denote $T_{u_t}(s'|s,a)=T(s'|s,a,u_t)$. We assume that there exist a null
 \end{itemize}
 
 While applying its iterative policy calculation algorithm, the learner
-faces a seqence of Markov Decision Problems (MDPs)~\cite{puterman_book_94}
+faces a sequence of Markov Decision Problems (MDPs)~\cite{puterman_book_94}
 $<S,A,U,T_{u_t},R>$, although it is not aware of the dynamics
 modulation and proceeds as if they were homogeneous. That is, at every
 stage the learner seeks an action policy of the form
@@ -119,9 +119,9 @@ $\pi_t=\pi(x_t):S\rightarrow\Delta(A)$ be the policy that corresponds
 to that computation state. Also, denote $\pi^*$ the ideal reference
 action policy of the learner. Then at time $t$ the teacher incurs cost
 $Cost(\pi_t,u_t)$ that combines the distance between $\pi_t$ and
-$\pi^*$ and between $T_{u_t}$ and $T^*$. The overall optimization
+$\pi^*$ and between $T_{u_t}$ and $T^*$. The overall optimisation
 problem for the teacher is as follows, where $x_t=F(x_{t-1},u_t)$
-denotes one step of the learner's compuation algorithm and $x_0$ is
+denotes one step of the learner's computation algorithm and $x_0$ is
 known:
 \begin{eqnarray*}
 &\min\limits_{u_t}\sum\limits_{t=1}^{t_{max}}Cost(\pi_t,u_t)\\
@@ -143,7 +143,7 @@ above, can also adopt various cost functions that describe how the
 teacher fuses the environment modification effort and the distance of
 the learner from the reference policy. However, in this work we adopt
 a specific cost function based on the Kullback-Leibler divergence
-rate. This enables an automic balancing between the two costs. It also
+rate. This enables an autonomic balancing between the two costs. It also
 has the additional benefit to concentrate the cost dependency on those
 portions of the environment dynamics that are most relevant to the
 current action policy choice by the learner. In the following
@@ -218,7 +218,7 @@ the expected total discounted reward that can be achieved if the
 environment starts at state $s$ and the agent follows $\pi_{t-1}$. PI
 then adopts a different policy for the current stage, one that takes
 advantage of the $V_t$ guarantees. Formally instantiating our
-learner's state update $F(x_t,u)$ by PI leands to the following set of
+learner's state update $F(x_t,u)$ by PI leads to the following set of
 equations:
 {\center 
 $V_t(s)=\sum\limits_{s'}T_{u_t}(s'|s,\pi_{t-1}(s))\left[
@@ -232,7 +232,7 @@ c(s',a,s)+\gamma V_t(s')
 \right]\right)$\\
 }
 The parameter $\tau_t$ denotes a so called temperature scale that
-shifts the soft-max towards the greedy maximum selecton. Substituting
+shifts the soft-max towards the greedy maximum selection. Substituting
 the above into the standard TOP formulation leads to a TOP-PI
 optimisation problem depicted in Figure~\ref{t_opt_PI}.
 \begin{figure}[th]
@@ -257,7 +257,7 @@ $\Tilde{T}_{u_t}(s'|s)=\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)\}$\\\ \\
   PI learner}
 \end{figure}
 
-\section{Experimetal Demonstration}
+\section{Experimental Demonstration}
 Consider an learner agent that is tasked with finding an optimal path
 for supply transportation between point S and T on a grid. The
 learner's reward is initially fixed to be $-1$ for every step it takes
@@ -302,7 +302,7 @@ experiments are directed to verify this proposition using our TOP-PI formalism.
 
 In this paper we have introduced a novel interaction framework between
 a teacher and a learner agents. Unlike previous developments in this
-area, in our framework the teacher influences the learner indirecly by
+area, in our framework the teacher influences the learner indirectly by
 modifying the environment away from some normative, passive
 dynamics. 
 
@@ -314,21 +314,21 @@ algorithm. As part of our ongoing research we will investigate the
 instantiations of TOP with other learning algorithms, particularly
 those capable of knowledge transfer.
 
-The cost and the effectivness of the teaching process in TOP can
+The cost and the effectiveness of the teaching process in TOP can
 be measured simultaneously via the Kullback-Leibler divergence rate
 (KLR). Specifically, by measuring the KLR between two state-action
 processes engendered by the learner's action policy and the
 environment dynamics set by the teacher. The detailed choice of the
 two processes depends on the interpretation of this cost. One such
 interpretation, as the effort it takes to sustain the teaching process
-at any given time, is adoped in this paper. As a result the cost is
+at any given time, is adopted in this paper. As a result the cost is
 the KLR between the current policy-environment combination and the
 combination of the reference policy with the passive
 dynamics. However, in our future work we intend to explore a different
 interpretation -- the total effort invested into the teaching
 process. In this case the KLR will be between two consecutive
 policy-environment combinations plus some final cost expressed by the
-KRL between the final policy-environment pair and the combination of
+KLR between the final policy-environment pair and the combination of
 the reference policy with the passive environment dynamics. 
 
 
