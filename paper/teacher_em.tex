@@ -53,6 +53,44 @@
 \nocite{dufton_larson_2009}
 \nocite{banerjee_peng_2005}
 
+Recently, Zhang \emph{et al} introduced a general framework for \emph{environment design}~\cite{Zhang09:General}. In environment design an interested party attempts to influence the behavior of an agent by making limited changes to the agent's environment.  While our model is a particular example of environment design, we note that our instantiation differs significantly from the particular cases studied by Zhang \emph{et al}.  
+In particular, Zhang \emph{et al} have allowed their interested party to modify the cost function of an agent in a linear programming example~\cite{Zhang09:General}, or to modify the rewards of an agent acting in an environment modeled as an MDP~\cite{zhang_parkes_2008,Zhang09:Policy}.
+We, however, study the implications of allowing the interested party (teacher, in our model) to modify the \emph{dynamics} of the environment, while leaving the reward function of the agent alone.  
+
+
+%Zhang et al~\cite{Zhang09:Policy}  looked at environment design (include citation for aaai 2008 
+%paper).  Had an interested party that tries to influence an agent's behavior by making limited 
+%changes to the agent's environment. Thus our work fits into this paradigm.  
+
+%The difference is that they were interested in influencing the agent's reward function, by providing 
+%positive incentives $\Delta:S\mapsto \mathbb{R}$, and then allowing the agent to re-act to the 
+%change in reward function.  Additionally the placement of incentives  is only through the reward 
+%function.  That is, their policy-teaching process had the interested party modifying the agent's 
+%reward function tp affect it's policy.
+
+%%Zhang et al have investigated this model as it applies to value-based policy  teaching~
+%%\cite{zhang_parkes_2008}. In this work they studied how the interested party 
+%could induce a policy 
+%%that maximized \emph{it's} value, when using limited incentives.  
+%In follow-up work, Zhang et al~
+%%\cite{Zhang09:Policy}  studied the policy-teaching setup where the goal is to teach 
+%a pre-specified 
+%%desired policy.  This is what we are doing, but we are going to go about it in a different way -- 
+%%though modifications to the dynamics of the underlying MDP.
+
+%%Zhang et al~\cite{Zhang09:General} introduce a general framework for environment design.
+% Our model does fit into their definition. However, our particular instantiation 
+%%has not been looked at. 
+%%Also their focus is different. In particular, it looks as though what we are interested 
+%in is actualy an instance of their "static formulation" since the "dynamic formulation" really
+% focuses on eliciting model parameters.  While we do repeatedly interact with the agent 
+% in our model, we do start with the assumption that the interested party does know the model.
+%%Their particular instantiation involves a linear programming example where the
+% interested party can modify the costs incurred by the agent.
+%%I need to go back and re-read the paper - part of it is so general to be not
+% particularly useful, while the other part is so specific to not be particularly useful.
+
+
 \section{Interaction Model}
 Our interaction framework consists of a dynamic stochastic environment
 that is influenced by two agents, a {\em learner} and a {\em
