@@ -257,6 +257,81 @@ $\Tilde{T}_{u_t}(s'|s)=\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)\}$\\\ \\
   PI learner}
 \end{figure}
 
+\section{Experimetal Demonstration}
+Consider an learner agent that is tasked with finding an optimal path
+for supply transportation between point S and T on a grid. The
+learner's reward is initially fixed to be $-1$ for every step it takes
+plus some values $R_{ST}$ and $R_{TS}$ for reaching point T from S and
+vice versa. In a uniform grid this would be a simple problem, however,
+the gird simulates a terrain and cells have an elevation associated
+with it. As a result, any movement from one cell to another
+neighbouring cell succeeds with a probability proportionate to the
+relative elevation of the cells. Consider the situation depicted in Figure~\ref{exp_motion}. 
+
+\begin{figure}[ht]
+\centerline{\psfig{file=img/exp_motion.eps,width=5cm}}
+\caption{\label{exp_motion}Example of a 3D terrain grid}
+\end{figure}
+
+If the cells are of equal elevation, the movement almost always
+succeeds, e.g. moving from cell $B$ to cell $C$ in
+Figure~\ref{exp_motion}. If the source cell of the motion is lower
+than the target cell, then the motion succeeds with low
+probability. Furthermore, in this case, a non-zero probability exists
+that the direction of motion will be altered. E.g. moving from $H$ to
+$E$ is unlikely to succeed, and the agent may end up in $D$, $F$ or
+even $G$. If the motion is directed to lower the elevation, it is most
+likely will succeed, but also has certain probability to move further
+than intended. E.g. moving from $B$ to $E$ is likely to succeed, but
+the agent may end up in $H$ or $G$.
+
+Finding an optimal path of motion from $S$ to $T$ and back is,
+therefore, becomes non-trivial. Still, if the probabilities of
+different transitions are given, the policy iteration algorithm can
+easily solve the problem. However, the time it takes the algorithm to
+converge to an optimal policy may vary depending on how prominent are
+the features of the terrain. Therefore it would be reasonable to
+assume that scaling the terrain (and modifying transition
+probabilities accordingly) during the initial iterations of learning
+will result in faster convergence to the optimal solution. Our
+experiments are directed to verify this proposition using our TOP-PI formalism.
+
+{\Large TODO\\ -- CONTINUE WITH REAL DETAILS HERE}
+
+\section{Conclusions and Future Work}
+
+In this paper we have introduced a novel interaction framework between
+a teacher and a learner agents. Unlike previous developments in this
+area, in our framework the teacher influences the learner indirecly by
+modifying the environment away from some normative, passive
+dynamics. 
+
+Although in this paper we provide an example based on a learner
+executing the policy iteration (PI) algorithm, this limitation is not
+a part of our Teacher Optimisation Problem (TOP) framework. Rather it
+is a particular instantiation of its principles for the PI
+algorithm. As part of our ongoing research we will investigate the
+instantiations of TOP with other learning algorithms, particularly
+those capable of knowledge transfer.
+
+The cost and the effectivness of the teaching process in TOP can
+be measured simultaneously via the Kullback-Leibler divergence rate
+(KLR). Specifically, by measuring the KLR between two state-action
+processes engendered by the learner's action policy and the
+environment dynamics set by the teacher. The detailed choice of the
+two processes depends on the interpretation of this cost. One such
+interpretation, as the effort it takes to sustain the teaching process
+at any given time, is adoped in this paper. As a result the cost is
+the KLR between the current policy-environment combination and the
+combination of the reference policy with the passive
+dynamics. However, in our future work we intend to explore a different
+interpretation -- the total effort invested into the teaching
+process. In this case the KLR will be between two consecutive
+policy-environment combinations plus some final cost expressed by the
+KRL between the final policy-environment pair and the combination of
+the reference policy with the passive environment dynamics. 
+
+
 \bibliographystyle{plain}
 \bibliography{teacher_em}
 
