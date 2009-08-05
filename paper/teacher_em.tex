@@ -90,52 +90,73 @@ We, however, study the implications of allowing the interested party (teacher, i
 %%I need to go back and re-read the paper - part of it is so general to be not
 % particularly useful, while the other part is so specific to not be particularly useful.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Interaction Model}\label{sec: GeneralModel}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Interaction Model}
-Our interaction framework consists of a dynamic stochastic environment
-that is influenced by two agents, a {\em learner} and a {\em
-  teacher}. The learner agent receives a direct feedback from the
-environment in form of a reward, that depends on the change in the
-environment's state and the action chosen by the learner. We assume
-that the learner is rational and, therefore, seeks an action policy
-that will maximise its expected reward. To achieve this goal the
-learner employs a publicly known iterative computation or a learning
-algorithm, depending on environment model availability. At each
-iteration of the algorithm, the chosen policy is compared with some
-ideal or {\em reference} policy held by the teacher agent. The
-difference between the two policies determines the cost of that stage
-for the teacher agent. The teacher agent may attempt to influence the
-learner's policy calculation by modifying the environment
-dynamics. That is, the teacher's actions influence the way the
-environment state changes in response to the learner's
-actions. However, such modulation incurs additional cost to the
-teacher agent. Further away the teacher pushes the environment from a
-certain nominal or {\em passive} dynamics, higher the cost. In this
-interaction framework, we would be interested to find a sequence of
-teacher's actions that optimally balances the two costs: distance of
-the learner's policy from the reference and the cost of the
-environment modification.
+In this section we provide a high level description of the problem and general framework.
+In the next section we provide a particular instantiation of our framework.
 
-To instantiate the above framework, we will consider for the remainder
-of this paper the following Markovian environment tuple $<S,A,U,T,R>$,
-where:
+Our framework consists of a stochastic environment and two agents, a \emph{learner} and a 
+\emph{teacher}.   The learner acts within the environment, taking actions and receiving feedback in 
+the form of rewards, which depend on the action taken and the current state of the environment in 
+which the agent finds itself.  We assume that the learner is rational and thus attempts to find a 
+\emph{policy} which describes what action to take in each environment state,  that maximises its 
+expected reward.  The teacher, on the other hand, does not act \emph{in} the environment, but rather acts \emph{on} the environment.  In particular, the teacher has some desired \emph{reference policy}, $\pi^*$, that it wishes the learner to follow, but is unable to force the agent to take any particular action.  Instead, it is able to modify the environment's \emph{dynamics} in order to  influence the policy choice of the learner. That is, the teacher's actions are able to influence the way the environment state changes in response to the learner's actions, and thus influence the policy of the learner. Dynamics modifications come at a cost, however, and thus the goal of the teacher is to minimize the modifications it must make to the environment dynamics while at the same time ensuring that the policy followed by the learner is close enough to the desired reference policy.
+
+
+
+
+%Our interaction framework consists of a dynamic stochastic environment
+%that is influenced by two agents, a {\em learner} and a {\em
+%  teacher}. The learner agent receives a direct feedback from the
+%environment in form of a reward, that depends on the change in the
+%environment's state and the action chosen by the learner. We assume
+%that the learner is rational and, therefore, seeks an action policy
+%that will maximise its expected reward. To achieve this goal the
+%learner employs a publicly known iterative computation or a learning
+%algorithm, depending on environment model availability. At each
+%iteration of the algorithm, the chosen policy is compared with some
+%ideal or {\em reference} policy held by the teacher agent. The
+%difference between the two policies determines the cost of that stage
+%for the teacher agent. The teacher agent may attempt to influence the
+%learner's policy calculation by modifying the environment
+%dynamics. That is, the teacher's actions influence the way the
+%environment state changes in response to the learner's
+%actions. However, such modulation incurs additional cost to the
+%teacher agent. Further away the teacher pushes the environment from a
+%certain nominal or {\em passive} dynamics, higher the cost. In this
+%interaction framework, we would be interested to find a sequence of
+%teacher's actions that optimally balances the two costs: distance of
+%the learner's policy from the reference and the cost of the
+%environment modification.
+
+We model the problem by $\langle S, A, c,\gamma, U,T\rangle$ where:
+%
+%To instantiate the above framework, we will consider for the remainder
+%of this paper the following Markovian environment tuple $<S,A,U,T,R>$,
+%where:
 \begin{itemize}
-\item $S$ is the state space of the environment
-\item $A$ is the set of actions available to the learner
-\item $U$ is the space of modifications that the teacher can apply
-\item $c:S\times A\times S\rightarrow\mathbf{R}$ is the reward (or
+\item $S$ is the set of states, 
+\item $A$ is the set of actions available to the learner,
+\item  $c:S\times A\times S\rightarrow\mathbf{R}$ is the reward (or
   cost) function of the learner. $c(s',a,s)$ is the reward received by
   the learner if it has applied action $a\in A$ and the environment
-  moved from state $s\in S$ to state $s'\in S$.
-\item $T:S\times A\times U\rightarrow\Delta(S)$ is the transition
-  function. 
+  moved from state $s\in S$ to state $s'\in S$,
+\item $\gamma \in (0,1)$ is a discount factor,   
 
-$T(s'|s,a,u)$ is the probability that the
-  environment state will change from $s$ to $s'$ if the learner has
-  applied action $a\in A$ and the teacher chose the environment
+\item $U$ is the set of actions (modifications to the environment)  that the teacher can apply and $u_t\in U$ is the modification made at time $t$, 
+
+\item $T:S\times A\times U\rightarrow\Delta(S)$ describes the environment dynamics where 
+$T_u(s'|s,a)\equiv T(s'|s,a,u)$ is the probability that the state will change from $s$ to $s'$ if the learner has
+  applied action $a\in A$ and the teacher chose  environment
   modification $u\in U$.
 
-Denote $T_{u_t}(s'|s,a)=T(s'|s,a,u_t)$. We assume that there exist a null
+%Denote $T_{u_t}(s'|s,a)=T(s'|s,a,u_t)$. 
+ 
+ %% KATE NEEDS TO THINK ABOUT THE NEXT BIT SINCE SHE DOES NOT LIKE THE 
+ %% NOTATION.
+We assume that there exist a null
   modification $u^*\in U$, so that $T^*=T_{u^*}$ are the nominal,
   passive dynamics of the environment.
 \end{itemize}
