@@ -407,25 +407,11 @@ the reference policy with the passive environment dynamics.
 \bibliographystyle{plain}
 \bibliography{teacher_em}
 
-\newpage
-\appendix
-\section{Intuition}
-Given a learner that attempts to find an action policy to optimise its
-utility. We can modify the environment response to the learner's
-actions and we want to use this capability to enforce learning of a
-particular policy of action.
-
-For instance, if a learning agent needs to find an optimal racing path
-(see Figure~\ref{race_path}), depending on the terrain it may take long
-time to explore all options. By making the terrain features more
-prominent at several locations a teacher can facilitate faster
-learning of the intended cycle.
-
-\begin{figure*}[ht]
-{\center 
-\subfigure[Passive dynamics]{\psfig{file=img/race_track_flat.eps,width=5cm}}
-\subfigure[Augmented dynamics]{\psfig{file=img/race_track.eps,width=5cm}}\\}
-\caption{\label{race_path}Unmodified (passive) and augmented environment dynamics for race path finding (colours naturally encode traversability of the cell)}
-\end{figure*}
+%\begin{figure*}[ht]
+%{\center 
+%\subfigure[Passive dynamics]{\psfig{file=img/race_track_flat.eps,width=5cm}}
+%\subfigure[Augmented dynamics]{\psfig{file=img/race_track.eps,width=5cm}}\\}
+%\caption{\label{race_path}Unmodified (passive) and augmented environment dynamics for race path finding (colours naturally encode traversability of the cell)}
+%\end{figure*}
 
 \end{document}
