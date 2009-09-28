@@ -1,4 +1,4 @@
-\documentclass[letterpaper]{aamas2009}
+\documentclass[letterpaper]{aamas2010}
 %\usepackage{ijcai09}
 \usepackage{amssymb}
 %\usepackage[english]{babel}
@@ -16,7 +16,7 @@
 \begin{tabular}{c}}
 %
 
-\numberofauthors{3} 
+\numberofauthors{4} 
 
 \author{\alignauthor Zinovi Rabinovich\\
   \affaddr{Electronics and Computer Science}\\
@@ -33,6 +33,11 @@
   \affaddr{University of Waterloo}\\
   \affaddr{Waterloo, Canada}\\
   \email{klarson@cs.uwaterloo.ca}
+\alignauthor Nicholas R. Jennings\\
+  \affaddr{Electronics and Computer Science}\\
+  \affaddr{University of Southampton}\\
+  \affaddr{Southampton, United Kingdom}\\
+  \email{nrj@ecs.soton.ac.uk}
 } 
 
 \title{Policy  Teaching by a Modulation of the Transition Model}
@@ -48,94 +53,98 @@
 \nocite{todorov_2009_framework_sup}
 \nocite{todorov_2009_framework}
 \nocite{ng_russell_2000}
-\nocite{zhang_parkes_2008}
 \nocite{zhang_parkes_2009_ed}
 \nocite{dufton_larson_2009}
 \nocite{banerjee_peng_2005}
 
-Recently, Zhang \emph{et al} introduced a general framework for \emph{environment design}~\cite{Zhang09:General}. In environment design an interested party attempts to influence the behavior of an agent by making limited changes to the agent's environment.  While our model is a particular example of environment design, we note that our instantiation differs significantly from the particular cases studied by Zhang \emph{et al}.  
-In particular, Zhang \emph{et al} have allowed their interested party to modify the cost function of an agent in a linear programming example~\cite{Zhang09:General}, or to modify the rewards of an agent acting in an environment modeled as an MDP~\cite{zhang_parkes_2008,Zhang09:Policy}.
-We, however, study the implications of allowing the interested party (teacher, in our model) to modify the \emph{dynamics} of the environment, while leaving the reward function of the agent alone.  
+There are three main teaching techniques applied by people: by
+demonstration, by incentive, by environment dynamics
+modification. While the
+first two have been mapped into intelligent agent models, to the best
+of our knowledge, the third one has yet to be instantiated.
 
+Teaching by demonstration has found a significant expression in
+robotics~\cite{argal_etal_2009}. However, these mostly assume that the
+learner actually wishes to learn the task, as well as a certain
+benevolence on behalf of the teacher with respect to the learned
+task.
 
-%Zhang et al~\cite{Zhang09:Policy}  looked at environment design (include citation for aaai 2008 
-%paper).  Had an interested party that tries to influence an agent's behavior by making limited 
-%changes to the agent's environment. Thus our work fits into this paradigm.  
+On the other hand, teaching by incentive has been formalised in a way
+that allows to the teacher to have an interest that may contradict
+that of the learner. In more detail, recently, Zhang \emph{et al}
+introduced a general framework for \emph{environment
+  design}~\cite{Zhang09:General}. In environment design an interested
+party attempts to influence the behavior of an agent by making limited
+changes to the agent's environment. Although in general this may
+include environment dynamics modification, Zhang \emph{et al} have
+concentrated on teaching by incentive. In particular, Zhang \emph{et
+  al} have allowed their interested party to modify the cost function
+of an agent in a linear programming example~\cite{Zhang09:General}, or
+to modify the rewards of an agent acting in an environment modeled as
+an MDP~\cite{zhang_parkes_2008,Zhang09:Policy}.
 
-%The difference is that they were interested in influencing the agent's reward function, by providing 
-%positive incentives $\Delta:S\mapsto \mathbb{R}$, and then allowing the agent to re-act to the 
-%change in reward function.  Additionally the placement of incentives  is only through the reward 
-%function.  That is, their policy-teaching process had the interested party modifying the agent's 
-%reward function tp affect it's policy.
+In this paper we explicitly focus on the the implications of allowing
+the interested party (teacher, in our model) to modify the
+\emph{dynamics} of the environment, while leaving the reward function
+of the agent alone. While our model may be cast as an example of
+environment design, we note that our instantiation differs
+significantly from the particular cases studied by Zhang \emph{et al},
+and therefore creates a separate line of study. To realise the
+necessity and importance of teaching by environment dynamics
+modification consider the following real life scenario. A parent
+wishes to teach a child to ride a bicycle. The parent may {\em
+  demonstrate} by riding the bicycle. However, in practice, this does
+not yield good results when the child attempt to repeat the task. It
+is also possible to promise an {\em incentive}, be that candy or a
+trip to the movies. Unfortunatelly, although increasing the childs
+efforts, this does not facilitate the learning process. The most
+practical thing to do in this case, is to {\em modify the dynamics} -- add
+safety wheels to the bicycle. Gradually raising the safety wheels,
+allows the child to accustom to the complete range of motion
+possibilities and, eventually, ride an unabriged bicycle version.
 
-%%Zhang et al have investigated this model as it applies to value-based policy  teaching~
-%%\cite{zhang_parkes_2008}. In this work they studied how the interested party 
-%could induce a policy 
-%%that maximized \emph{it's} value, when using limited incentives.  
-%In follow-up work, Zhang et al~
-%%\cite{Zhang09:Policy}  studied the policy-teaching setup where the goal is to teach 
-%a pre-specified 
-%%desired policy.  This is what we are doing, but we are going to go about it in a different way -- 
-%%though modifications to the dynamics of the underlying MDP.
+In what follows we will formally define teaching by dynamics
+modification given a learning algorithm we wish to teach
+(Section~\ref{sec: GeneralModel}). We will also provide a specialised
+version of the formalism for a specific MDP solution technique --
+Policy Iteration (PI) algorithm (Section~\ref{sec: TOP-PI}). $\{\{$
+Our experimens in Section~\ref{sec: experiments} will compare the
+performance of PI with and without dynamics modification. $\}\}$. We
+will then conclude in Section~\ref{sec: future work} with a discussion of further
+development teaching by dynamics modification.
 
-%%Zhang et al~\cite{Zhang09:General} introduce a general framework for environment design.
-% Our model does fit into their definition. However, our particular instantiation 
-%%has not been looked at. 
-%%Also their focus is different. In particular, it looks as though what we are interested 
-%in is actualy an instance of their "static formulation" since the "dynamic formulation" really
-% focuses on eliciting model parameters.  While we do repeatedly interact with the agent 
-% in our model, we do start with the assumption that the interested party does know the model.
-%%Their particular instantiation involves a linear programming example where the
-% interested party can modify the costs incurred by the agent.
-%%I need to go back and re-read the paper - part of it is so general to be not
-% particularly useful, while the other part is so specific to not be particularly useful.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Interaction Model}\label{sec: GeneralModel}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this section we provide a high level description of the problem and general framework.
-In the next section we provide a particular instantiation of our framework.
+In this section we provide a high level description of the problem and
+general framework.  In the next section we provide a particular
+instantiation of our framework.
 
-Our framework consists of a stochastic environment and two agents, a \emph{learner} and a 
-\emph{teacher}.   The learner acts within the environment, taking actions and receiving feedback in 
-the form of rewards, which depend on the action taken and the current state of the environment in 
-which the agent finds itself.  We assume that the learner is rational and thus attempts to find a 
-\emph{policy} which describes what action to take in each environment state,  that maximises its 
-expected reward.  The teacher, on the other hand, does not act \emph{in} the environment, but rather acts \emph{on} the environment.  In particular, the teacher has some desired \emph{reference policy}, $\pi^*$, that it wishes the learner to follow, but is unable to force the agent to take any particular action.  Instead, it is able to modify the environment's \emph{dynamics} in order to  influence the policy choice of the learner. That is, the teacher's actions are able to influence the way the environment state changes in response to the learner's actions, and thus influence the policy of the learner. Dynamics modifications come at a cost, however, and thus the goal of the teacher is to minimize the modifications it must make to the environment dynamics while at the same time ensuring that the policy followed by the learner is close enough to the desired reference policy.
-
-
-
-
-%Our interaction framework consists of a dynamic stochastic environment
-%that is influenced by two agents, a {\em learner} and a {\em
-%  teacher}. The learner agent receives a direct feedback from the
-%environment in form of a reward, that depends on the change in the
-%environment's state and the action chosen by the learner. We assume
-%that the learner is rational and, therefore, seeks an action policy
-%that will maximise its expected reward. To achieve this goal the
-%learner employs a publicly known iterative computation or a learning
-%algorithm, depending on environment model availability. At each
-%iteration of the algorithm, the chosen policy is compared with some
-%ideal or {\em reference} policy held by the teacher agent. The
-%difference between the two policies determines the cost of that stage
-%for the teacher agent. The teacher agent may attempt to influence the
-%learner's policy calculation by modifying the environment
-%dynamics. That is, the teacher's actions influence the way the
-%environment state changes in response to the learner's
-%actions. However, such modulation incurs additional cost to the
-%teacher agent. Further away the teacher pushes the environment from a
-%certain nominal or {\em passive} dynamics, higher the cost. In this
-%interaction framework, we would be interested to find a sequence of
-%teacher's actions that optimally balances the two costs: distance of
-%the learner's policy from the reference and the cost of the
-%environment modification.
+Our framework consists of a stochastic environment and two agents, a
+\emph{learner} and a \emph{teacher}.  The learner acts within the
+environment, taking actions and receiving feedback in the form of
+rewards, which depend on the action taken and the current state of the
+environment in which the agent finds itself.  We assume that the
+learner is rational and thus attempts to find a \emph{policy} which
+describes what action to take in each environment state, that
+maximises its expected reward.  The teacher, on the other hand, does
+not act \emph{in} the environment, but rather acts \emph{on} the
+environment.  In particular, the teacher has some desired
+\emph{reference policy}, $\pi^*$, that it wishes the learner to
+follow, but is unable to force the agent to take any particular
+action.  Instead, it is able to modify the environment's
+\emph{dynamics} in order to influence the policy choice of the
+learner. That is, the teacher's actions are able to influence the way
+the environment state changes in response to the learner's actions,
+and thus influence the policy of the learner. Dynamics modifications
+come at a cost, however, and thus the goal of the teacher is to
+minimize the modifications it must make to the environment dynamics
+while at the same time ensuring that the policy followed by the
+learner is close enough to the desired reference policy.
 
 We model the problem by $\langle S, A, c,\gamma, U,T\rangle$ where:
-%
-%To instantiate the above framework, we will consider for the remainder
-%of this paper the following Markovian environment tuple $<S,A,U,T,R>$,
-%where:
 \begin{itemize}
 \item $S$ is the set of states, 
 \item $A$ is the set of actions available to the learner,
@@ -145,12 +154,15 @@ We model the problem by $\langle S, A, c,\gamma, U,T\rangle$ where:
   moved from state $s\in S$ to state $s'\in S$,
 \item $\gamma \in (0,1)$ is a discount factor,   
 
-\item $U$ is the set of actions (modifications to the environment)  that the teacher can apply and $u_t\in U$ is the modification made at time $t$, 
+\item $U$ is the set of actions (modifications to the environment)
+  that the teacher can apply and $u_t\in U$ is the modification made
+  at time $t$,
 
-\item $T:S\times A\times U\rightarrow\Delta(S)$ describes the environment dynamics where 
-$T_u(s'|s,a)\equiv T(s'|s,a,u)$ is the probability that the state will change from $s$ to $s'$ if the learner has
-  applied action $a\in A$ and the teacher chose  environment
-  modification $u\in U$.
+\item $T:S\times A\times U\rightarrow\Delta(S)$ describes the
+  environment dynamics where $T_u(s'|s,a)\equiv T(s'|s,a,u)$ is the
+  probability that the state will change from $s$ to $s'$ if the
+  learner has applied action $a\in A$ and the teacher chose
+  environment modification $u\in U$.
 
 %Denote $T_{u_t}(s'|s,a)=T(s'|s,a,u_t)$. 
  
@@ -241,8 +253,9 @@ q_t(s')&=&\sum\limits_s\Tilde{T}_{u_t}(s'|s)q_t(s)
 \end{eqnarray*}
 
 Assuming that $P_t$ and $P^*$ are irreducible w.r.t. $S\times A$ the
-Kullback-Leibler divergence rate, $KLR$, can be computed~\cite{rached_alajaji_campbell_2004} to form the
-necessary cost function as follows:
+Kullback-Leibler divergence rate, $KLR$, can be
+computed~\cite{rached_alajaji_campbell_2004} to form the necessary
+cost function as follows:
 $$
 Cost(u_t,\pi_t)=KLR(P_t\|P^*)=\sum\limits_{s,a}q_t(s,a)D^{KL}_t(s,a),$$
 where $$D^{KL}_t(s,a)=\sum\limits_{s',a'}P_t(s',a'|s,a)\log\frac{P_t(s',a'|s,a)}{P^*(s',a'|s,a)},
@@ -268,7 +281,7 @@ $\Tilde{T}_{u_t}(s'|s)=\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)\}$\\\ \\
 \caption{\label{t_opt}The complete generic TOP}
 \end{figure}
 
-\subsection{TOP with Policy Iteration}
+\section{TOP with Policy Iteration}\label{sec: TOP-PI}
 The policy iteration (PI) algorithm is an iterative computation
 algorithm that operates over an explicitly given MDP. Given the policy
 of the previous iteration, $\pi_{t-1}$, PI first computes the so
@@ -316,7 +329,7 @@ $\Tilde{T}_{u_t}(s'|s)=\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)\}$\\\ \\
   PI learner}
 \end{figure}
 
-\section{Experimental Demonstration}
+\section{Experimental Demonstration}\label{sec: experiments}
 Consider an learner agent that is tasked with finding an optimal path
 for supply transportation between point S and T on a grid. The
 learner's reward is initially fixed to be $-1$ for every step it takes
@@ -357,7 +370,7 @@ experiments are directed to verify this proposition using our TOP-PI formalism.
 
 {\Large TODO\\ -- CONTINUE WITH REAL DETAILS HERE}
 
-\section{Conclusions and Future Work}
+\section{Conclusions and Future Work}\label{sec: future work}
 
 In this paper we have introduced a novel interaction framework between
 a teacher and a learner agents. Unlike previous developments in this
