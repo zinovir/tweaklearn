@@ -221,9 +221,34 @@ current action policy choice by the learner. In the following
 subsection we describe our teacher's cost function in more detail.
 
 \subsection{Teacher's Cost Computation}
-As a measure of cost we will use Kullback-Leibler divergence rate
+As a measure of cost we will use Kullback-Leibler divergence rate (KLR) 
 between two processes formed by the application of the teacher's
-augmentation $u_t$ and the learner's policy $\pi_t$. More specifically,
+augmentation $u_t$ and the learner's policy $\pi_t$.
+
+KLR focuses on the long term divergence between two processes and is
+therefore consistent with our assumption that the learner seeks best
+response to the long term effects of the augmented environment
+dynamics. Formally, KRL is defined as the following limit between two
+stochastic processes $\{X^1_t\}$ and $\{X^2_t\}$:
+$$
+KLR(X^1\|X^2)=\lim\limits_{t\rightarrow\infty}\frac{1}{t}D^{KL}(X^1_{1:t}\|X^2_{1:t}),
+$$
+
+where, $D^{KL}$ is the Kullback-Leibler divergence defined by:
+$$
+D^{KL}(X^1\|X^2)=\sum\limits_xP(X^1=x)\log\frac{P(X^1=x)}{P(X^2=x)}
+$$
+
+However, for homogeneous Markovian processes the limit has a closed analytic
+form~\cite{rached_alajaji_campbell_2004}. In more detail, consider two
+processes over an abstract space $X$, described by two conditional
+transition matrices $P$ and $Q$, so that $P(x'|x)$ (respectively
+$Q(x'|x)$) is the probability of transition from state $x$ to state
+$x'$. Then the following holds:
+
+$$KLR(P\|Q)=\sum\limits_{x\in X}p_{stat}(x)\sum\limits_{x'\in X}P(x'|x)\log\frac{P(x'|x)}{Q{x'|x}}$$
+
+Now, to apply KLR to our model we will 
 consider the stochastic process over the state-action pairs formed by
 the application of the learner's policy in the modified environment at
 time $t$: \\
