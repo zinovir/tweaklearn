@@ -55,7 +55,6 @@
 \nocite{ng_russell_2000}
 \nocite{zhang_parkes_2009_ed}
 \nocite{dufton_larson_2009}
-\nocite{banerjee_peng_2005}
 
 There are three main teaching techniques applied by people: by
 demonstration, by incentive, by environment dynamics
@@ -86,22 +85,38 @@ an MDP~\cite{zhang_parkes_2008,Zhang09:Policy}.
 In this paper we explicitly focus on the the implications of allowing
 the interested party (teacher, in our model) to modify the
 \emph{dynamics} of the environment, while leaving the reward function
-of the agent alone. While our model may be cast as an example of
-environment design, we note that our instantiation differs
-significantly from the particular cases studied by Zhang \emph{et al},
-and therefore creates a separate line of study. To realise the
-necessity and importance of teaching by environment dynamics
-modification consider the following real life scenario. A parent
-wishes to teach a child to ride a bicycle. The parent may {\em
-  demonstrate} by riding the bicycle. However, in practice, this does
-not yield good results when the child attempt to repeat the task. It
-is also possible to promise an {\em incentive}, be that candy or a
-trip to the movies. Unfortunatelly, although increasing the childs
-efforts, this does not facilitate the learning process. The most
-practical thing to do in this case, is to {\em modify the dynamics} -- add
-safety wheels to the bicycle. Gradually raising the safety wheels,
-allows the child to accustom to the complete range of motion
-possibilities and, eventually, ride an unabriged bicycle version.
+of the agent alone. We first introduce a way to measure the divergence
+between the realised and the passive (when no modification is applied
+by the teacher) environment developments. This measure naturally
+incorporates and balances the teacher's effort and the deviation of
+the learner's performance from an ideal reference, that which the
+teacher is interested in. It also allows us to formulate the teacher's
+problem as a planning and control problem, and solve it using
+classical analytical and numerical tools. 
+
+
+While our model may be cast as an example of environment design, we
+note that our instantiation differs significantly from the particular
+cases studied by Zhang \emph{et al}, and therefore creates a separate
+line of study. In fact, representing the teacher's task as a control
+problem is far more reminiscent of the work by Banerjee and
+Peng~\cite{banerjee_peng_2005}, although it too focuses on the reward
+modification.
+
+
+To realise the necessity and importance of teaching by
+environment dynamics modification consider the following real life
+scenario. A parent wishes to teach a child to ride a bicycle. The
+parent may {\em demonstrate} by riding the bicycle. However, in
+practice, this does not yield good results when the child attempt to
+repeat the task. It is also possible to promise an {\em incentive}, be
+that candy or a trip to the movies. Unfortunatelly, although
+increasing the childs efforts, this does not facilitate the learning
+process. The most practical thing to do in this case, is to {\em
+  modify the dynamics} -- add safety wheels to the bicycle. Gradually
+raising the safety wheels, allows the child to accustom to the
+complete range of motion possibilities and, eventually, ride an
+unabriged bicycle version.
 
 In what follows we will formally define teaching by dynamics
 modification given a learning algorithm we wish to teach
@@ -110,8 +125,8 @@ version of the formalism for a specific MDP solution technique --
 Policy Iteration (PI) algorithm (Section~\ref{sec: TOP-PI}). $\{\{$
 Our experimens in Section~\ref{sec: experiments} will compare the
 performance of PI with and without dynamics modification. $\}\}$. We
-will then conclude in Section~\ref{sec: future work} with a discussion of further
-development teaching by dynamics modification.
+will then conclude in Section~\ref{sec: future work} with a discussion
+of further development teaching by dynamics modification.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -246,7 +261,7 @@ transition matrices $P$ and $Q$, so that $P(x'|x)$ (respectively
 $Q(x'|x)$) is the probability of transition from state $x$ to state
 $x'$. Then the following holds:
 
-$$KLR(P\|Q)=\sum\limits_{x\in X}p_{stat}(x)\sum\limits_{x'\in X}P(x'|x)\log\frac{P(x'|x)}{Q{x'|x}}$$
+$$KLR(P\|Q)=\sum\limits_{x\in X}p_{stat}(x)D^{KL}(P(\cdot|x)\|Q(\cdot|x))$$
 
 Now, to apply KLR to our model we will 
 consider the stochastic process over the state-action pairs formed by
