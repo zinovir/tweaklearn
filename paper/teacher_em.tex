@@ -16,29 +16,52 @@
 \begin{tabular}{c}}
 %
 
+\newtheorem{assume}{{\bf Assumption}}
+
 \numberofauthors{4} 
 
-\author{\alignauthor Zinovi Rabinovich\\
-  \affaddr{Electronics and Computer Science}\\
-  \affaddr{University of Southampton}\\
-  \affaddr{Southampton, United Kingdom}\\
+%% \author{\alignauthor Zinovi Rabinovich\\
+%%   \affaddr{Electronics and Computer Science}\\
+%%   \affaddr{University of Southampton}\\
+%%   \affaddr{Southampton, United Kingdom}\\
+%%   \email{zr@ecs.soton.ac.uk}
+%% \alignauthor Lachlan Dufton\\ 
+%%   \affaddr{Cheriton School of Computer Science}\\
+%%   \affaddr{University of Waterloo}\\
+%%   \affaddr{Waterloo, Canada}\\
+%%   \email{ltdufton@cs.uwaterloo.ca}
+%% \alignauthor Kate Larson\\
+%%   \affaddr{Cheriton School of Computer Science}\\
+%%   \affaddr{University of Waterloo}\\
+%%   \affaddr{Waterloo, Canada}\\
+%%   \email{klarson@cs.uwaterloo.ca}
+%% \and
+%% \alignauthor Nicholas R. Jennings\\
+%%   \affaddr{Electronics and Computer Science}\\
+%%   \affaddr{University of Southampton}\\
+%%   \affaddr{Southampton, United Kingdom}\\
+%%   \email{nrj@ecs.soton.ac.uk}
+%% } 
+
+\author{\alignauthor Zinovi Rabinovich$^{\dagger}$\\
   \email{zr@ecs.soton.ac.uk}
-\alignauthor Lachlan Dufton\\ 
-  \affaddr{Cheriton School of Computer Science}\\
-  \affaddr{University of Waterloo}\\
-  \affaddr{Waterloo, Canada}\\
+\alignauthor Lachlan Dufton$^*$\\ 
   \email{ltdufton@cs.uwaterloo.ca}
-\alignauthor Kate Larson\\
-  \affaddr{Cheriton School of Computer Science}\\
-  \affaddr{University of Waterloo}\\
-  \affaddr{Waterloo, Canada}\\
+\alignauthor Kate Larson$^*$\\
   \email{klarson@cs.uwaterloo.ca}
-\alignauthor Nicholas R. Jennings\\
-  \affaddr{Electronics and Computer Science}\\
-  \affaddr{University of Southampton}\\
-  \affaddr{Southampton, United Kingdom}\\
+\and
+\alignauthor Nicholas R. Jennings$^{\dagger}$\\
   \email{nrj@ecs.soton.ac.uk}
+\sharedaffiliation
+  \affaddr{$^{\dagger}$Electronics and Computer Science, University of Southampton, United Kingdom}\\
+  \affaddr{$^*$Cheriton School of Computer Science, University of Waterloo, Canada}\\
 } 
+
+%\alignauthor Zinovi Rabinovich\\
+%\alignauthor Lachlan Dufton\\ 
+%\alignauthor Kate Larson\\
+%\alignauthor Nicholas R. Jennings
+%}
 
 \title{Policy  Teaching by a Modulation of the Transition Model}
 
@@ -47,14 +70,12 @@
 \maketitle
 
 \section{Introduction}
-\nocite{taylor_PhD_2008}
-\nocite{taylor_stone_2009}
-\nocite{fleming_hernandez-hernandez_CDC_97}
-\nocite{todorov_2009_framework_sup}
-\nocite{todorov_2009_framework}
-\nocite{ng_russell_2000}
-\nocite{zhang_parkes_2009_ed}
-\nocite{dufton_larson_2009}
+%\nocite{fleming_hernandez-hernandez_CDC_97}
+%\nocite{todorov_2009_framework_sup}
+%\nocite{todorov_2009_framework}
+%\nocite{ng_russell_2000}
+%\nocite{zhang_parkes_2009_ed}
+%\nocite{dufton_larson_2009}
 
 There are three main teaching techniques applied by people: by
 demonstration, by incentive, by environment dynamics
@@ -73,13 +94,13 @@ that allows to the teacher to have an interest that may contradict
 that of the learner. In more detail, recently, Zhang \emph{et al}
 introduced a general framework for \emph{environment
   design}~\cite{Zhang09:General}. In environment design an interested
-party attempts to influence the behavior of an agent by making limited
+party attempts to influence the behaviour of an agent by making limited
 changes to the agent's environment. Although in general this may
 include environment dynamics modification, Zhang \emph{et al} have
 concentrated on teaching by incentive. In particular, Zhang \emph{et
   al} have allowed their interested party to modify the cost function
 of an agent in a linear programming example~\cite{Zhang09:General}, or
-to modify the rewards of an agent acting in an environment modeled as
+to modify the rewards of an agent acting in an environment modelled as
 an MDP~\cite{zhang_parkes_2008,Zhang09:Policy}.
 
 In this paper we explicitly focus on the the implications of allowing
@@ -87,12 +108,12 @@ the interested party (teacher, in our model) to modify the
 \emph{dynamics} of the environment, while leaving the reward function
 of the agent alone. We first introduce a way to measure the divergence
 between the realised and the passive (when no modification is applied
-by the teacher) environment developments. This measure naturally
-incorporates and balances the teacher's effort and the deviation of
-the learner's performance from an ideal reference, that which the
-teacher is interested in. It also allows us to formulate the teacher's
-problem as a planning and control problem, and solve it using
-classical analytical and numerical tools. 
+by the teacher) environment developments in a Markovian system. This
+measure naturally incorporates and balances the teacher's effort and
+the deviation of the learner's performance from an ideal reference,
+that which the teacher is interested in. It also allows us to
+formulate the teacher's problem as a planning and control problem, and
+solve it using classical analytical and numerical tools.
 
 
 While our model may be cast as an example of environment design, we
@@ -103,27 +124,26 @@ problem is far more reminiscent of the work by Banerjee and
 Peng~\cite{banerjee_peng_2005}, although it too focuses on the reward
 modification.
 
-
 To realise the necessity and importance of teaching by
 environment dynamics modification consider the following real life
 scenario. A parent wishes to teach a child to ride a bicycle. The
 parent may {\em demonstrate} by riding the bicycle. However, in
 practice, this does not yield good results when the child attempt to
 repeat the task. It is also possible to promise an {\em incentive}, be
-that candy or a trip to the movies. Unfortunatelly, although
-increasing the childs efforts, this does not facilitate the learning
+that a candy or a trip to the movies. Unfortunately, although
+increasing the child's efforts, this does not facilitate the learning
 process. The most practical thing to do in this case, is to {\em
   modify the dynamics} -- add safety wheels to the bicycle. Gradually
 raising the safety wheels, allows the child to accustom to the
 complete range of motion possibilities and, eventually, ride an
-unabriged bicycle version.
+unabridged bicycle version.
 
 In what follows we will formally define teaching by dynamics
 modification given a learning algorithm we wish to teach
 (Section~\ref{sec: GeneralModel}). We will also provide a specialised
 version of the formalism for a specific MDP solution technique --
 Policy Iteration (PI) algorithm (Section~\ref{sec: TOP-PI}). $\{\{$
-Our experimens in Section~\ref{sec: experiments} will compare the
+Our experiments in Section~\ref{sec: experiments} will compare the
 performance of PI with and without dynamics modification. $\}\}$. We
 will then conclude in Section~\ref{sec: future work} with a discussion
 of further development teaching by dynamics modification.
@@ -155,7 +175,7 @@ learner. That is, the teacher's actions are able to influence the way
 the environment state changes in response to the learner's actions,
 and thus influence the policy of the learner. Dynamics modifications
 come at a cost, however, and thus the goal of the teacher is to
-minimize the modifications it must make to the environment dynamics
+minimise the modifications it must make to the environment dynamics
 while at the same time ensuring that the policy followed by the
 learner is close enough to the desired reference policy.
 
@@ -189,15 +209,18 @@ We assume that there exist a null
 \end{itemize}
 
 While applying its iterative policy calculation algorithm, the learner
-faces a sequence of Markov Decision Problems (MDPs)~\cite{puterman_book_94}
-$<S,A,U,T_{u_t},R>$, although it is not aware of the dynamics
-modulation and proceeds as if they were homogeneous. That is, at every
+faces a sequence of Markov Decision Problems (MDPs)~\cite{puterman_book_94},
+ given by tuples $<S,A,U,T_{u_t},R>$, although it is not aware of the dynamics
+modulation and proceeds as if they were homogeneous. 
+\begin{assume}\label{assume_persistence}
+At every
 stage the learner seeks an action policy of the form
 $\pi:S\rightarrow\Delta(A)$ that would produce the highest expected
-reward if $T_{u_t}$ would persist indefinitely.\footnote{This latter
+reward if $T_{u_t}$ would persist indefinitely.\footnote{This 
   assumption is explicit only if the learner actually has access to
   the environment model. For most standard RL algorithms this
   assumption would hold implicitly.}
+\end{assume}
 
 Now, denote $x_t$ the internal state of the learner's policy
 computation at iteration $t$, and let
@@ -236,47 +259,51 @@ current action policy choice by the learner. In the following
 subsection we describe our teacher's cost function in more detail.
 
 \subsection{Teacher's Cost Computation}
-As a measure of cost we will use Kullback-Leibler divergence rate (KLR) 
-between two processes formed by the application of the teacher's
-augmentation $u_t$ and the learner's policy $\pi_t$.
+As a measure of cost we will use Kullback-Leibler divergence rate
+(KLR) between two processes formed by the application of the teacher's
+augmentation $u_t$ and the learner's policy $\pi_t$. 
 
-KLR focuses on the long term divergence between two processes and is
-therefore consistent with our assumption that the learner seeks best
-response to the long term effects of the augmented environment
-dynamics. Formally, KRL is defined as the following limit between two
-stochastic processes $\{X^1_t\}$ and $\{X^2_t\}$:
+Specifically, consider 
+%Formally, KLR is defined as the following limit between two
+%stochastic processes $\{X^1_t\}$ and $\{X^2_t\}$:
+%$$
+%KLR(X^1\|X^2)=\lim\limits_{t\rightarrow\infty}\frac{1}{t}D^{KL}(X^1_{1:t}\|X^2_{1:t}),
+%$$
+%
+%where, $D^{KL}$ is the Kullback-Leibler divergence defined by:
+%$$
+%D^{KL}(X^1\|X^2)=\sum\limits_xP(X^1=x)\log\frac{P(X^1=x)}{P(X^2=x)}
+%$$
+%% However, for homogeneous Markovian processes the limit has a closed analytic
+%% form~\cite{rached_alajaji_campbell_2004}. In more detail, consider two
+%% processes over an abstract space $X$, described by two conditional
+%% transition matrices $P$ and $Q$, so that $P(x'|x)$ (respectively
+%% $Q(x'|x)$) is the probability of transition from state $x$ to state
+%% $x'$. Then the following holds:
+%% $$KLR(P\|Q)=\sum\limits_{x\in X}p_{stat}(x)D^{KL}(P(\cdot|x)\|Q(\cdot|x))$$
+%% Now, to apply KLR to our model we will 
+%% consider 
+the stochastic process over the state-action pairs formed by the
+repeated application of the learner's policy in the environment
+modified by $u_t$. This is a homogeneous Markovian process captured 
+by the transition matrix: \\ \centerline{$
+  P_t(s',a'|s,a)=T_{u_t}(s'|s,a)\pi_t(a'|s') $}
+
+Similarly, denote $P^*(s',a'|s,a)=T^*(s'|s,a)\pi^*(a'|s')$ the
+stochastic process over the state-action pairs formed by the ideal
+learner's policy and the passive environment dynamics.  Assuming that
+$P_t$ and $P^*$ are irreducible w.r.t. $S\times A$ the
+Kullback-Leibler divergence rate, $KLR$, can be
+computed~\cite{rached_alajaji_campbell_2004} to form the necessary
+cost function as follows:
 $$
-KLR(X^1\|X^2)=\lim\limits_{t\rightarrow\infty}\frac{1}{t}D^{KL}(X^1_{1:t}\|X^2_{1:t}),
-$$
-
-where, $D^{KL}$ is the Kullback-Leibler divergence defined by:
-$$
-D^{KL}(X^1\|X^2)=\sum\limits_xP(X^1=x)\log\frac{P(X^1=x)}{P(X^2=x)}
-$$
-
-However, for homogeneous Markovian processes the limit has a closed analytic
-form~\cite{rached_alajaji_campbell_2004}. In more detail, consider two
-processes over an abstract space $X$, described by two conditional
-transition matrices $P$ and $Q$, so that $P(x'|x)$ (respectively
-$Q(x'|x)$) is the probability of transition from state $x$ to state
-$x'$. Then the following holds:
-
-$$KLR(P\|Q)=\sum\limits_{x\in X}p_{stat}(x)D^{KL}(P(\cdot|x)\|Q(\cdot|x))$$
-
-Now, to apply KLR to our model we will 
-consider the stochastic process over the state-action pairs formed by
-the application of the learner's policy in the modified environment at
-time $t$: \\
-\centerline{$
-P_t(s',a'|s,a)=T_{u_t}(s'|s,a)\pi_t(a'|s')
-$}
-
-Similarly, denote $P^*(s',a'|s,a)=T^*(s'|s,a)\pi^*(a'|s')$.
-
-The process $P_t$ has a stationary distribution $q_t$ over $S\times
-A$, so that $q_t=P_tq_t$. Notably, the stationary distribution can be
-decomposed (with a slight abuse of notation) $q_t(s,a)=q_t(a|s)q_t(s)$
-and then expressed by the following equations:
+Cost(u_t,\pi_t)=KLR(P_t\|P^*)=\sum\limits_{s,a}q_t(s,a)D^{KL}_t(s,a),$$
+where
+$D^{KL}_t(s,a)=D^{KL}(P_t(\cdot,\cdot|s,a)\|P^*(\cdot,\cdot|s,a))$ and
+$q_t$ is the stationary distribution of $P_t$, so that
+$q_t=P_tq_t$. Notably, the stationary distribution can be decomposed
+(with a slight abuse of notation) $q_t(s,a)=q_t(a|s)q_t(s)$ and then
+expressed by the following equations:
 %% \begin{eqnarray*}
 %% q_t&=&q_t(a'|s')q_t(s')=P_tq_t\\
 %% &=&\sum\limits_{s,a}T_{u_t}(s'|s,a)\pi_t(a'|s')q_t(a|s)q_t(s)\\
@@ -292,21 +319,24 @@ q_t(s',a')&=&\pi_t(a'|s')q_t(s')\ \ \displaystyle{where}\\
 q_t(s')&=&\sum\limits_s\Tilde{T}_{u_t}(s'|s)q_t(s)
 \end{eqnarray*}
 
-Assuming that $P_t$ and $P^*$ are irreducible w.r.t. $S\times A$ the
-Kullback-Leibler divergence rate, $KLR$, can be
-computed~\cite{rached_alajaji_campbell_2004} to form the necessary
-cost function as follows:
-$$
-Cost(u_t,\pi_t)=KLR(P_t\|P^*)=\sum\limits_{s,a}q_t(s,a)D^{KL}_t(s,a),$$
-where $$D^{KL}_t(s,a)=\sum\limits_{s',a'}P_t(s',a'|s,a)\log\frac{P_t(s',a'|s,a)}{P^*(s',a'|s,a)},
-$$
+Although ideologically this choice of the cost function is similar to
+works by
+Todorov~\cite{todorov_2009_framework,todorov_2009_framework_sup}, its
+integration with the rest of the interaction model is
+different. Furthermore, we use KL {\em rate}, rather than KL {\em
+  divergence} used by Todorov. This allows us to focus on the {\em
+  long term} divergence between the two processes, which is consistent
+with our Assumption~\ref{assume_persistence} that the learner seeks
+best response to the long term effects of the augmented environment
+dynamics.
 
-The overall generic teacher optimisation problem (TOP) is depicted in
-Figure~\ref{t_opt}. Notice that this formulation retains complete
-flexibility with respect to the specific algorithm selected by the
-learner to optimise its policy. However, to provide further intuition
-and demonstrate the feasibility of the approach we instantiate the
-algorithm $F$ to be the Policy Iteration algorithm.
+Incorporating our KLR based cost function, the overall generic Teacher
+Optimisation Problem (TOP) is depicted in Figure~\ref{t_opt}. Notice
+that this formulation retains complete flexibility with respect to the
+specific algorithm selected by the learner to optimise its
+policy. However, to provide further intuition and demonstrate the
+feasibility of the approach we instantiate the algorithm $F$ to be the
+Policy Iteration algorithm.
 \begin{figure}[ht]
 \begin{tabular}{|c|} \hline \parbox{3.2 in} {\center 
 $\arg\min\limits_{u_t}\sum\limits_{t=1}^{t_{max}}\sum\limits_{s,a}\pi_t(a|s)q_t(s)D^{KL}_t(s,a)$\\
@@ -316,7 +346,7 @@ $x_t=F(x_{t-1},u_t)$\\
 $x_0\ \ \displaystyle{is\ \ given}$\\
 $D^{KL}_t(s,a)=\sum\limits_{s',a'}T_{u_t}(s'|a,s)\pi_t(a'|s')\log\frac{T_{u_t}(s'|a,s)\pi_t(a'|s')}{T^*(s'|a,s)\pi^*(a'|s')}$\\
 $q_t(s')=\sum\limits_s\Tilde{T}_{u_t}(s'|s)q_t(s)$\\
-$\Tilde{T}_{u_t}(s'|s)=\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)\}$\\\ \\
+$\Tilde{T}_{u_t}(s'|s)=\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)$\\\ \\
 }\\ \hline \end{tabular}
 \caption{\label{t_opt}The complete generic TOP}
 \end{figure}
@@ -363,7 +393,7 @@ c(s',a,s)+\gamma V_t(s')
 $\pi_0\ \ \displaystyle{given}$\\
 $D^{KL}_t(s,a)=\sum\limits_{s',a'}T_{u_t}(s'|a,s)\pi_t(a'|s')\log\frac{T_{u_t}(s'|a,s)\pi_t(a'|s')}{T^*(s'|a,s)\pi^*(a'|s')}$\\
 $q_t(s')=\sum\limits_s\Tilde{T}_{u_t}(s'|s)q_t(s)$\\
-$\Tilde{T}_{u_t}(s'|s)=\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)\}$\\\ \\
+$\Tilde{T}_{u_t}(s'|s)=\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)$\\\ \\
 }\\ \hline \end{tabular}
 \caption{\label{t_opt_PI}TOP-PI: The complete and explicit TOP for the
   PI learner}
@@ -424,7 +454,7 @@ a part of our Teacher Optimisation Problem (TOP) framework. Rather it
 is a particular instantiation of its principles for the PI
 algorithm. As part of our ongoing research we will investigate the
 instantiations of TOP with other learning algorithms, particularly
-those capable of knowledge transfer.
+those capable of knowledge transfer~\cite{taylor_stone_2009,taylor_PhD_2008}.
 
 The cost and the effectiveness of the teaching process in TOP can
 be measured simultaneously via the Kullback-Leibler divergence rate
