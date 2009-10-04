@@ -7,7 +7,7 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{algorithmic}
-\usepackage{times}
+%\usepackage{times}
 \usepackage{subfigure}
 %\usepackage{natbib}
 %
@@ -20,42 +20,20 @@
 
 \numberofauthors{4} 
 
-%% \author{\alignauthor Zinovi Rabinovich\\
-%%   \affaddr{Electronics and Computer Science}\\
-%%   \affaddr{University of Southampton}\\
-%%   \affaddr{Southampton, United Kingdom}\\
-%%   \email{zr@ecs.soton.ac.uk}
-%% \alignauthor Lachlan Dufton\\ 
-%%   \affaddr{Cheriton School of Computer Science}\\
-%%   \affaddr{University of Waterloo}\\
-%%   \affaddr{Waterloo, Canada}\\
-%%   \email{ltdufton@cs.uwaterloo.ca}
-%% \alignauthor Kate Larson\\
-%%   \affaddr{Cheriton School of Computer Science}\\
-%%   \affaddr{University of Waterloo}\\
-%%   \affaddr{Waterloo, Canada}\\
-%%   \email{klarson@cs.uwaterloo.ca}
-%% \and
-%% \alignauthor Nicholas R. Jennings\\
-%%   \affaddr{Electronics and Computer Science}\\
-%%   \affaddr{University of Southampton}\\
-%%   \affaddr{Southampton, United Kingdom}\\
-%%   \email{nrj@ecs.soton.ac.uk}
-%% } 
 
-\author{\alignauthor Zinovi Rabinovich$^{\dagger}$\\
-  \email{zr@ecs.soton.ac.uk}
-\alignauthor Lachlan Dufton$^*$\\ 
-  \email{ltdufton@cs.uwaterloo.ca}
-\alignauthor Kate Larson$^*$\\
-  \email{klarson@cs.uwaterloo.ca}
-\and
-\alignauthor Nicholas R. Jennings$^{\dagger}$\\
-  \email{nrj@ecs.soton.ac.uk}
-\sharedaffiliation
-  \affaddr{$^{\dagger}$Electronics and Computer Science, University of Southampton, United Kingdom}\\
-  \affaddr{$^*$Cheriton School of Computer Science, University of Waterloo, Canada}\\
-} 
+%\author{\alignauthor Zinovi Rabinovich$^{\dagger}$\\
+%  \email{zr@ecs.soton.ac.uk}
+%\alignauthor Lachlan Dufton$^*$\\ 
+%  \email{ltdufton@cs.uwaterloo.ca}
+%\alignauthor Kate Larson$^*$\\
+%  \email{klarson@cs.uwaterloo.ca}
+%\and
+%\alignauthor Nicholas R. Jennings$^{\dagger}$\\
+%  \email{nrj@ecs.soton.ac.uk}
+%\sharedaffiliation
+%  \affaddr{$^{\dagger}$Electronics and Computer Science, University of Southampton, United Kingdom}\\
+%  \affaddr{$^*$Cheriton School of Computer Science, University of Waterloo, Canada}\\
+%} 
 
 %\alignauthor Zinovi Rabinovich\\
 %\alignauthor Lachlan Dufton\\ 
@@ -163,7 +141,7 @@ environment, taking actions and receiving feedback in the form of
 rewards, which depend on the action taken and the current state of the
 environment in which the agent finds itself.  We assume that the
 learner is rational and thus attempts to find a \emph{policy} which
-describes what action to take in each environment state, that
+describes what action to take in each environment state, so as to
 maximises its expected reward.  The teacher, on the other hand, does
 not act \emph{in} the environment, but rather acts \emph{on} the
 environment.  In particular, the teacher has some desired
@@ -203,10 +181,19 @@ We model the problem by $\langle S, A, c,\gamma, U,T\rangle$ where:
  
  %% KATE NEEDS TO THINK ABOUT THE NEXT BIT SINCE SHE DOES NOT LIKE THE 
  %% NOTATION.
+ %% KATE HAS THOUGHT ABOUT IT AND STILL DOES NOT LIKE THIS NOTATION. 
+ %% SUGGESTIONS ARE NOT IN THE TEXT.
 We assume that there exist a null
   modification $u^*\in U$, so that $T^*=T_{u^*}$ are the nominal,
   passive dynamics of the environment.
+  
+  [KATE: I DO NOT LIKE THE NOTATION USED ABOVE SINCE WE USE * FOR TWO THINGS;  
+  DESIRED POLICY OF THE TEACHER AND THE UNCHANGED ENVIRONMENTS. TOO  
+  CONFUSING.
+  INSTEAD, I PROPOSE THAT WE USE $u^0\in U$ TO REPRESENT THE NULL MODIFICATION 
+   $T^0=T_{u^0}$.  I HAVE NOT MADE ANY OF THESE CHANGES IN THE TEXT.]
 \end{itemize}
+
 
 While applying its iterative policy calculation algorithm, the learner
 faces a sequence of Markov Decision Problems (MDPs)~\cite{puterman_book_94},
@@ -222,22 +209,36 @@ reward if $T_{u_t}$ would persist indefinitely.\footnote{This
   assumption would hold implicitly.}
 \end{assume}
 
-Now, denote $x_t$ the internal state of the learner's policy
-computation at iteration $t$, and let
-$\pi_t=\pi(x_t):S\rightarrow\Delta(A)$ be the policy that corresponds
-to that computation state. Also, denote $\pi^*$ the ideal reference
-action policy of the learner. Then at time $t$ the teacher incurs cost
-$Cost(\pi_t,u_t)$ that combines the distance between $\pi_t$ and
-$\pi^*$ and between $T_{u_t}$ and $T^*$. The overall optimisation
-problem for the teacher is as follows, where $x_t=F(x_{t-1},u_t)$
-denotes one step of the learner's computation algorithm and $x_0$ is
-known:
+
+Let  $x_t$ represent all information and features that the learner uses in determining its policy, and 
+let $\pi_t=\pi(x_t):S\rightarrow\Delta(A)$ be the policy that corresponds
+to that state.  Additionally, let $\pi^*$ be the ideal policy that the teacher desires the learner to follow.  At time $t$, the teacher incurs a cost, $\mathrm{Cost}(\pi_t,u_t)$, which combines the difference between the actual policy being followed by the learner, $\pi_t$, and the desired policy of the teacher, $\pi^*$, with the amount of environmental modifications the learner has had to make in order to maintain the current dynamics, $T_{u_t}$, compared to the initial environment dynamics, $T^*$. (I WOULD PREFER TO USE $T^0$).  If we let $x_t=F(x_{t-1},u_t)$ denote one step of the learner's policy-determination algorithm and assume that $x_0$ is known, 
+the overall optimisation problem faced by the teacher is:
 \begin{eqnarray*}
 &\min\limits_{u_t}\sum\limits_{t=1}^{t_{max}}Cost(\pi_t,u_t)\\
 &s.t.\\
 &\pi_t=\pi(x_t)\\
 &x_t=F(x_{t-1},u_t)
 \end{eqnarray*}
+
+
+
+%Now, denote $x_t$ the internal state of the learner's policy
+%computation at iteration $t$, and let
+%$\pi_t=\pi(x_t):S\rightarrow\Delta(A)$ be the policy that corresponds
+%to that computation state. Also, denote $\pi^*$ the ideal reference
+%action policy of the learner. Then at time $t$ the teacher incurs cost
+%$Cost(\pi_t,u_t)$ that combines the distance between $\pi_t$ and
+%$\pi^*$ and between $T_{u_t}$ and $T^*$. The overall optimisation
+%problem for the teacher is as follows, where $x_t=F(x_{t-1},u_t)$
+%denotes one step of the learner's computation algorithm and $x_0$ is
+%known:
+%\begin{eqnarray*}
+%&\min\limits_{u_t}\sum\limits_{t=1}^{t_{max}}Cost(\pi_t,u_t)\\
+%&s.t.\\
+%&\pi_t=\pi(x_t)\\
+%&x_t=F(x_{t-1},u_t)
+%\end{eqnarray*}
 
 Notice that the above formulation is generic with respect to the
 actual algorithm employed by the learner agent. The formalism captures
@@ -252,16 +253,17 @@ above, can also adopt various cost functions that describe how the
 teacher fuses the environment modification effort and the distance of
 the learner from the reference policy. However, in this work we adopt
 a specific cost function based on the Kullback-Leibler divergence
-rate. This enables an autonomic balancing between the two costs. It also
+rate. This enables a balancing between the two costs. It also
 has the additional benefit to concentrate the cost dependency on those
 portions of the environment dynamics that are most relevant to the
 current action policy choice by the learner. In the following
 subsection we describe our teacher's cost function in more detail.
 
 \subsection{Teacher's Cost Computation}
-As a measure of cost we will use Kullback-Leibler divergence rate
-(KLR) between two processes formed by the application of the teacher's
-augmentation $u_t$ and the learner's policy $\pi_t$. 
+
+The cost function we use in this paper is the Kullbank-Leibler divergence rate (KLR) between two processes formed by the application of the teacher's modification, $u_t$, and the learner's policy,
+ $\pi_t$.
+
 
 Specifically, consider 
 %Formally, KLR is defined as the following limit between two
@@ -285,13 +287,14 @@ Specifically, consider
 %% consider 
 the stochastic process over the state-action pairs formed by the
 repeated application of the learner's policy in the environment
-modified by $u_t$. This is a homogeneous Markovian process captured 
+modified by $u_t$. This results in  a homogeneous Markovian process captured 
 by the transition matrix: \\ \centerline{$
   P_t(s',a'|s,a)=T_{u_t}(s'|s,a)\pi_t(a'|s') $}
 
-Similarly, denote $P^*(s',a'|s,a)=T^*(s'|s,a)\pi^*(a'|s')$ the
-stochastic process over the state-action pairs formed by the ideal
-learner's policy and the passive environment dynamics.  Assuming that
+Similarly, define $P^*(s',a'|s,a)=T^*(s'|s,a)\pi^*(a'|s')$ to be the
+ideal stochastic process over the state-action pairs, which is formed when the teacher's desired policy is applied with the passive environment dynamics.\footnote{Note that this is the optimal situation from the perspective of the teacher -- its desired policy is used and it has to make no modifications to the environment.} 
+
+ Assuming that
 $P_t$ and $P^*$ are irreducible w.r.t. $S\times A$ the
 Kullback-Leibler divergence rate, $KLR$, can be
 computed~\cite{rached_alajaji_campbell_2004} to form the necessary
@@ -299,7 +302,9 @@ cost function as follows:
 $$
 Cost(u_t,\pi_t)=KLR(P_t\|P^*)=\sum\limits_{s,a}q_t(s,a)D^{KL}_t(s,a),$$
 where
-$D^{KL}_t(s,a)=D^{KL}(P_t(\cdot,\cdot|s,a)\|P^*(\cdot,\cdot|s,a))$ and
+$D^{KL}_t(s,a)=D^{KL}(P_t(\cdot,\cdot|s,a)\|P^*(\cdot,\cdot|s,a))$ is the KL divergence between 
+$P_t$ and $P^*$,
+and
 $q_t$ is the stationary distribution of $P_t$, so that
 $q_t=P_tq_t$. Notably, the stationary distribution can be decomposed
 (with a slight abuse of notation) $q_t(s,a)=q_t(a|s)q_t(s)$ and then
@@ -316,8 +321,12 @@ expressed by the following equations:
 %% so that
 \begin{eqnarray*}
 q_t(s',a')&=&\pi_t(a'|s')q_t(s')\ \ \displaystyle{where}\\
-q_t(s')&=&\sum\limits_s\Tilde{T}_{u_t}(s'|s)q_t(s)
+q_t(s')&=&\sum\limits_s\Tilde{T}_{u_t}(s'|s)q_t(s) \ \ \displaystyle{and}\\
+\Tilde{T}_{u_t}(s'|s)&=&\sum_{a}T_{u_t}(s'|s,a)\pi_t(a|s)
 \end{eqnarray*}
+
+[KATE: THIS NEXT PARAGRAPH SHOULD BE MOVED TO WHERE EVER THE RELATED WORK SECTION WILL BE (IE INTRODUCTION OR DISCUSSION) IT IS OUT OF PLACE HERE.]
+
 
 Although ideologically this choice of the cost function is similar to
 works by
@@ -330,12 +339,12 @@ with our Assumption~\ref{assume_persistence} that the learner seeks
 best response to the long term effects of the augmented environment
 dynamics.
 
-Incorporating our KLR based cost function, the overall generic Teacher
+Incorporating our KLR-based cost function, the overall generic Teacher
 Optimisation Problem (TOP) is depicted in Figure~\ref{t_opt}. Notice
 that this formulation retains complete flexibility with respect to the
 specific algorithm selected by the learner to optimise its
 policy. However, to provide further intuition and demonstrate the
-feasibility of the approach we instantiate the algorithm $F$ to be the
+feasibility of the approach, in the rest of this paper we instantiate the algorithm $F$ to be the
 Policy Iteration algorithm.
 \begin{figure}[ht]
 \begin{tabular}{|c|} \hline \parbox{3.2 in} {\center 
@@ -352,14 +361,14 @@ $\Tilde{T}_{u_t}(s'|s)=\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)$\\\ \\
 \end{figure}
 
 \section{TOP with Policy Iteration}\label{sec: TOP-PI}
-The policy iteration (PI) algorithm is an iterative computation
+The policy iteration (PI) algorithm is an iterative 
 algorithm that operates over an explicitly given MDP. Given the policy
-of the previous iteration, $\pi_{t-1}$, PI first computes the so
-called value function $V_t(s)$ for that policy. $V_t(s)$ represents
+of the previous iteration, $\pi_{t-1}$, PI first computes 
+the value function $V_t(s)$ for that policy, where  $V_t(s)$ represents
 the expected total discounted reward that can be achieved if the
-environment starts at state $s$ and the agent follows $\pi_{t-1}$. PI
-then adopts a different policy for the current stage, one that takes
-advantage of the $V_t$ guarantees. Formally instantiating our
+environment starts at state $s$ and the agent follows $\pi_{t-1}$.
+PI then computes $\pi_{t}$, which is optimal policy, given the $V_t(s)$.
+Formally instantiating our
 learner's state update $F(x_t,u)$ by PI leads to the following set of
 equations:
 {\center 
@@ -373,7 +382,7 @@ $Z_t(s)=\sum\limits_a\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
 c(s',a,s)+\gamma V_t(s')
 \right]\right)$\\
 }
-The parameter $\tau_t$ denotes a so called temperature scale that
+The parameter $\tau_t$ denotes a temperature scale that
 shifts the soft-max towards the greedy maximum selection. Substituting
 the above into the standard TOP formulation leads to a TOP-PI
 optimisation problem depicted in Figure~\ref{t_opt_PI}.
