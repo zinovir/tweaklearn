@@ -41,34 +41,24 @@
 %\alignauthor Nicholas R. Jennings
 %}
 
-\title{Policy  Teaching by a Modulation of the Transition Model}
+\title{Cultivating Desired Behaviour: Policy Teaching Via Environment-Dynamics Modification }
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-There are three main teaching techniques applied by people: by
-demonstration, by incentive, by environment dynamics
-modification. While the first two have been mapped into intelligent
-agent models, to the best of our knowledge, the third one has yet to
-be instantiated.  Teaching by demonstration has found a significant
-expression in robotics, while teaching by incentive has been
-researched from the game theoretic perspective, where an interested
-party attempts to manipulate other players by modifying their payoff
-function.
+%There are three main teaching techniques applied by people: by
+%demonstration, by incentive, by environment dynamics
+%modification. While the first two have been mapped into intelligent
+%agent models, to the best of our knowledge, the third one has yet to
+%be instantiated.  Teaching by demonstration has found a significant
+%expression in robotics, while teaching by incentive has been
+%researched from the game theoretic perspective, where an interested
+%party attempts to manipulate other players by modifying their payoff
+%function.
 
-In this paper we explicitly focus on the the implications of allowing
-the interested party (teacher, in our model) to modify the
-\emph{dynamics} of the environment, while leaving the reward function
-of the agent alone. We first introduce a way to measure the divergence
-between the realised and the passive (when no modification is applied
-by the teacher) environment developments in a Markovian system. This
-measure naturally incorporates and balances the teacher's effort and
-the deviation of the learner's performance from an ideal reference,
-that which the teacher is interested in. It also allows us to
-formulate the teacher's problem as a planning and control problem, and
-solve it using classical analytical and numerical tools.
+In this paper we explicitly study the implications of allowing an interested party (i.e. a teacher) the ability to modify the underlying \emph{dynamics} of the environment, in order to encourage an agent to learn to follow a specific policy. We introduce a cost function which can be used by the interested party to balance the modifications it makes to the underlying environment dynamics, with the learner's performance compared to some ideal, desired, policy. We formulate the interested party's problem of determining optimal environment changes as a planning and control problem, and empirically validate the effectiveness of our model.
 \end{abstract}
 
 \section{Introduction}
