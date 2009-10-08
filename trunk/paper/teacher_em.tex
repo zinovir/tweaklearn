@@ -211,21 +211,8 @@ We model the problem by $\langle S, A, c,\gamma, U,T\rangle$ where:
   learner has applied action $a\in A$ and the teacher chose
   environment modification $u\in U$.
 
-%Denote $T_{u_t}(s'|s,a)=T(s'|s,a,u_t)$. 
- 
- %% KATE NEEDS TO THINK ABOUT THE NEXT BIT SINCE SHE DOES NOT LIKE THE 
- %% NOTATION.
- %% KATE HAS THOUGHT ABOUT IT AND STILL DOES NOT LIKE THIS NOTATION. 
- %% SUGGESTIONS ARE NOT IN THE TEXT.
-We assume that there exist a null
-  modification $u^*\in U$, so that $T^*=T_{u^*}$ are the nominal,
-  passive dynamics of the environment.
-  
-  [KATE: I DO NOT LIKE THE NOTATION USED ABOVE SINCE WE USE * FOR TWO THINGS;  
-  DESIRED POLICY OF THE TEACHER AND THE UNCHANGED ENVIRONMENTS. TOO  
-  CONFUSING.
-  INSTEAD, I PROPOSE THAT WE USE $u^0\in U$ TO REPRESENT THE NULL MODIFICATION 
-   $T^0=T_{u^0}$.  I HAVE NOT MADE ANY OF THESE CHANGES IN THE TEXT.]
+We assume that there exist a null modification $u^0\in U$, so that
+$T^0=T_{u^0}$ are the nominal, passive dynamics of the environment.
 \end{itemize}
 
 
@@ -244,10 +231,20 @@ reward if $T_{u_t}$ would persist indefinitely.\footnote{This
 \end{assume}
 
 
-Let  $x_t$ represent all information and features that the learner uses in determining its policy, and 
-let $\pi_t=\pi(x_t):S\rightarrow\Delta(A)$ be the policy that corresponds
-to that state.  Additionally, let $\pi^*$ be the ideal policy that the teacher desires the learner to follow.  At time $t$, the teacher incurs a cost, $\mathrm{Cost}(\pi_t,u_t)$, which combines the difference between the actual policy being followed by the learner, $\pi_t$, and the desired policy of the teacher, $\pi^*$, with the amount of environmental modifications the learner has had to make in order to maintain the current dynamics, $T_{u_t}$, compared to the initial environment dynamics, $T^*$. (I WOULD PREFER TO USE $T^0$).  If we let $x_t=F(x_{t-1},u_t)$ denote one step of the learner's policy-determination algorithm and assume that $x_0$ is known, 
-the overall optimisation problem faced by the teacher is:
+Let $x_t$ represent all information and features that the learner uses
+in determining its policy, and let
+$\pi_t=\pi(x_t):S\rightarrow\Delta(A)$ be the policy that corresponds
+to that state.  Additionally, let $\pi^*$ be the ideal policy that the
+teacher desires the learner to follow.  At time $t$, the teacher
+incurs a cost, $\mathrm{Cost}(\pi_t,u_t)$, which combines the
+difference between the actual policy being followed by the learner,
+$\pi_t$, and the desired policy of the teacher, $\pi^*$, with the
+amount of environmental modifications the learner has had to make in
+order to maintain the current dynamics, $T_{u_t}$, compared to the
+initial environment dynamics, $T^0$. If we let $x_t=F(x_{t-1},u_t)$
+denote one step of the learner's policy-determination algorithm and
+assume that $x_0$ is known, the overall optimisation problem faced by
+the teacher is:
 \begin{eqnarray*}
 &\min\limits_{u_t}\sum\limits_{t=1}^{t_{max}}Cost(\pi_t,u_t)\\
 &s.t.\\
@@ -263,7 +260,7 @@ the overall optimisation problem faced by the teacher is:
 %to that computation state. Also, denote $\pi^*$ the ideal reference
 %action policy of the learner. Then at time $t$ the teacher incurs cost
 %$Cost(\pi_t,u_t)$ that combines the distance between $\pi_t$ and
-%$\pi^*$ and between $T_{u_t}$ and $T^*$. The overall optimisation
+%$\pi^*$ and between $T_{u_t}$ and $T^0$. The overall optimisation
 %problem for the teacher is as follows, where $x_t=F(x_{t-1},u_t)$
 %denotes one step of the learner's computation algorithm and $x_0$ is
 %known:
@@ -325,7 +322,7 @@ modified by $u_t$. This results in  a homogeneous Markovian process captured
 by the transition matrix: \\ \centerline{$
   P_t(s',a'|s,a)=T_{u_t}(s'|s,a)\pi_t(a'|s') $}
 
-Similarly, define $P^*(s',a'|s,a)=T^*(s'|s,a)\pi^*(a'|s')$ to be the
+Similarly, define $P^*(s',a'|s,a)=T^0(s'|s,a)\pi^*(a'|s')$ to be the
 ideal stochastic process over the state-action pairs, which is formed when the teacher's desired policy is applied with the passive environment dynamics.\footnote{Note that this is the optimal situation from the perspective of the teacher -- its desired policy is used and it has to make no modifications to the environment.} 
 
  Assuming that
@@ -359,20 +356,6 @@ q_t(s')&=&\sum\limits_s\Tilde{T}_{u_t}(s'|s)q_t(s) \ \ \displaystyle{and}\\
 \Tilde{T}_{u_t}(s'|s)&=&\sum_{a}T_{u_t}(s'|s,a)\pi_t(a|s)
 \end{eqnarray*}
 
-[KATE: THIS NEXT PARAGRAPH SHOULD BE MOVED TO WHERE EVER THE RELATED WORK SECTION WILL BE (IE INTRODUCTION OR DISCUSSION) IT IS OUT OF PLACE HERE.]
-
-
-Although ideologically this choice of the cost function is similar to
-works by
-Todorov~\cite{todorov_2009_framework,todorov_2009_framework_sup}, its
-integration with the rest of the interaction model is
-different. Furthermore, we use KL {\em rate}, rather than KL {\em
-  divergence} used by Todorov. This allows us to focus on the {\em
-  long term} divergence between the two processes, which is consistent
-with our Assumption~\ref{assume_persistence} that the learner seeks
-best response to the long term effects of the augmented environment
-dynamics.
-
 Incorporating our KLR-based cost function, the overall generic Teacher
 Optimisation Problem (TOP) is depicted in Figure~\ref{t_opt}. Notice
 that this formulation retains complete flexibility with respect to the
@@ -387,7 +370,7 @@ s.t.\\
 $\pi_t=\pi(x_t)$\\
 $x_t=F(x_{t-1},u_t)$\\
 $x_0\ \ \displaystyle{is\ \ given}$\\
-$D^{KL}_t(s,a)=\sum\limits_{s',a'}T_{u_t}(s'|a,s)\pi_t(a'|s')\log\frac{T_{u_t}(s'|a,s)\pi_t(a'|s')}{T^*(s'|a,s)\pi^*(a'|s')}$\\
+$D^{KL}_t(s,a)=\sum\limits_{s',a'}T_{u_t}(s'|a,s)\pi_t(a'|s')\log\frac{T_{u_t}(s'|a,s)\pi_t(a'|s')}{T^0(s'|a,s)\pi^*(a'|s')}$\\
 $q_t(s')=\sum\limits_s\Tilde{T}_{u_t}(s'|s)q_t(s)$\\
 $\Tilde{T}_{u_t}(s'|s)=\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)$\\\ \\
 }\\ \hline \end{tabular}
@@ -434,7 +417,7 @@ $Z_t(s)=\sum\limits_a\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
 c(s',a,s)+\gamma V_t(s')
 \right]\right)$\\
 $\pi_0\ \ \displaystyle{given}$\\
-$D^{KL}_t(s,a)=\sum\limits_{s',a'}T_{u_t}(s'|a,s)\pi_t(a'|s')\log\frac{T_{u_t}(s'|a,s)\pi_t(a'|s')}{T^*(s'|a,s)\pi^*(a'|s')}$\\
+$D^{KL}_t(s,a)=\sum\limits_{s',a'}T_{u_t}(s'|a,s)\pi_t(a'|s')\log\frac{T_{u_t}(s'|a,s)\pi_t(a'|s')}{T^0(s'|a,s)\pi^*(a'|s')}$\\
 $q_t(s')=\sum\limits_s\Tilde{T}_{u_t}(s'|s)q_t(s)$\\
 $\Tilde{T}_{u_t}(s'|s)=\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)$\\\ \\
 }\\ \hline \end{tabular}
@@ -499,8 +482,8 @@ algorithm. As part of our ongoing research we will investigate the
 instantiations of TOP with other learning algorithms, particularly
 those capable of knowledge transfer~\cite{taylor_stone_2009,taylor_PhD_2008}.
 
-The cost and the effectiveness of the teaching process in TOP can
-be measured simultaneously via the Kullback-Leibler divergence rate
+The cost and the effectiveness of the teaching process in TOP can be
+measured simultaneously via the Kullback-Leibler divergence rate
 (KLR). Specifically, by measuring the KLR between two state-action
 processes engendered by the learner's action policy and the
 environment dynamics set by the teacher. The detailed choice of the
@@ -508,13 +491,27 @@ two processes depends on the interpretation of this cost. One such
 interpretation, as the effort it takes to sustain the teaching process
 at any given time, is adopted in this paper. As a result the cost is
 the KLR between the current policy-environment combination and the
-combination of the reference policy with the passive
-dynamics. However, in our future work we intend to explore a different
-interpretation -- the total effort invested into the teaching
-process. In this case the KLR will be between two consecutive
-policy-environment combinations plus some final cost expressed by the
-KLR between the final policy-environment pair and the combination of
-the reference policy with the passive environment dynamics. 
+combination of the reference policy with the passive dynamics.
+
+Although ideologically this choice of the cost function is similar to
+works by
+Todorov~\cite{todorov_2009_framework,todorov_2009_framework_sup}, its
+integration with the interaction model is different. Furthermore, we
+use KL {\em rate}, rather than KL {\em divergence} used by
+Todorov. This allows us to focus on the {\em long term} divergence
+between the two processes, which is consistent with our
+Assumption~\ref{assume_persistence} that the learner seeks best
+response to the long term effects of the augmented environment
+dynamics.
+
+Notably, however, there are several more important and interesting
+cost interpretations. For instance, as a part of our ongoing and
+future work, we explore an interpretation as the total effort invested
+into the teaching process. In this case the KLR will be between two
+consecutive policy-environment combinations plus some final cost
+expressed by the KLR between the final policy-environment pair and the
+combination of the reference policy with the passive environment
+dynamics.
 
 
 \bibliographystyle{plain}
