@@ -333,13 +333,13 @@ cost function as follows:
 $$
 Cost(u_t,\pi_t)=KLR(P_t\|P^*)=\sum\limits_{s,a}q_t(s,a)D^{KL}_t(s,a),$$
 where
-$D^{KL}_t(s,a)=D^{KL}(P_t(\cdot,\cdot|s,a)\|P^*(\cdot,\cdot|s,a))$ is the KL divergence between 
-$P_t$ and $P^*$,
-and
-$q_t$ is the stationary distribution of $P_t$, so that
-$q_t=P_tq_t$. Notably, the stationary distribution can be decomposed
-(with a slight abuse of notation) $q_t(s,a)=q_t(a|s)q_t(s)$ and then
-expressed by the following equations:
+$D^{KL}_t(s,a)=D^{KL}(P_t(\cdot,\cdot|s,a)\|P^*(\cdot,\cdot|s,a))$ is
+the Kullabck-Leibler divergence between columns of $P_t$ and $P^*$,
+and $q_t$ is the stationary distribution of $P_t$, so that
+$q_t=P_tq_t$. Notably, the
+stationary distribution can be decomposed (with a slight abuse of
+notation) $q_t(s,a)=q_t(a|s)q_t(s)$ and then expressed by the
+following equations:
 %% \begin{eqnarray*}
 %% q_t&=&q_t(a'|s')q_t(s')=P_tq_t\\
 %% &=&\sum\limits_{s,a}T_{u_t}(s'|s,a)\pi_t(a'|s')q_t(a|s)q_t(s)\\
@@ -360,9 +360,25 @@ Incorporating our KLR-based cost function, the overall generic Teacher
 Optimisation Problem (TOP) is depicted in Figure~\ref{t_opt}. Notice
 that this formulation retains complete flexibility with respect to the
 specific algorithm selected by the learner to optimise its
-policy. However, to provide further intuition and demonstrate the
-feasibility of the approach, in the rest of this paper we instantiate the algorithm $F$ to be the
-Policy Iteration algorithm.
+policy. Nevertheless, to provide further intuition and demonstrate the
+feasibility of the approach, in the rest of this paper we instantiate
+the algorithm $F$ to be the Policy Iteration algorithm. However,
+before we proceed to this particular instantiation, we would like to
+remarks upon the meaning of KLR and KLD in our teaching problem.
+
+Originally, $KL$ divergence (and KRL) was designed to measure the cost
+of mistaken encoding. That is, if a signal had come from a
+distribution $P$, while we have used a distribution $Q$ to encode it,
+$KL(P\|Q)$ measures the extra bits we had to
+use\cite{cover_thomas_IT_book_91}. Therefore, given the signal,
+information theory seeks to recover $Q$ to minimise the extra cost. In
+our teaching domain, the signal is the sequence of state-action pairs
+engendered by the system dynamics and the learning algorithm. However,
+by changing the system dynamics we essentially change the signal true
+distribution, rather than its encoding. Hence, we represent the ideal
+policy and the passive dynamics as the encoding distribution $Q$,
+while we modulate the signal distribution $P$ to match it.
+
 \begin{figure}[ht]
 \begin{tabular}{|c|} \hline \parbox{3.2 in} {\center 
 $\arg\min\limits_{u_t}\sum\limits_{t=1}^{t_{max}}\sum\limits_{s,a}\pi_t(a|s)q_t(s)D^{KL}_t(s,a)$\\
@@ -376,6 +392,8 @@ $\Tilde{T}_{u_t}(s'|s)=\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)$\\\ \\
 }\\ \hline \end{tabular}
 \caption{\label{t_opt}The complete generic TOP}
 \end{figure}
+
+
 
 \section{TOP with Policy Iteration}\label{sec: TOP-PI}
 The policy iteration (PI) algorithm is an iterative 
