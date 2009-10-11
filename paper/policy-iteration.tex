@@ -11,8 +11,7 @@ represents the expected total discounted reward that can be achieved
 if the environment starts at state $s$ and the agent follows
 $\pi_{t-1}$. At the {\em policy improvement} stage the value function
 of the current policy is used to guide the computation of the next
-stage policy. Commonly, it is a policy $\pi_{t}$, which is optimal
-policy, given the $V_t(s)$.
+stage policy. Commonly, it is a policy, $\pi_{t}$, optimal with respect to the currect value function, $V_t(s)$.
 
 Since its original introduction, both stages of the algorithm have
 been refined to enable partial knowledge of the domain or introduce
