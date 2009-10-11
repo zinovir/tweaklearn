@@ -54,6 +54,13 @@ In our test environment, the information about the reward state can take multipl
 \caption{\label{newopt}A target policy that avoids centre cells.}
 \end{figure}
 
-We also tested modifying the optimal policy of the MDP through tweaked dynamics.  Our test problem modified the optimal policy from a simple shortest path to the reward state to one that avoids the centre states and follows the edge states to the goal (see Figure~\ref{newopt}).  Our tests showed that this policy modification was achieved through the modifications, provided by the teacher, to the environment dynamics.   With the teacher using TOP-PI on the new target policy, the learner found this new policy using Policy Iteration in $4$ iterations.
+We also tested modifying the optimal policy of the MDP through tweaked dynamics.  Our test problem modified the optimal policy from a simple shortest path to the reward state to one that avoids the centre states and follows the edge states to the goal (see Figure~\ref{newopt}).  Our tests showed that this policy modification was achieved through the modifications, provided by the teacher, to the environment dynamics.   With the teacher using TOP-PI on the new target policy, the learner found this new policy using Policy Iteration in $4$ iterations.  
+
+This policy modification method allows changes that are not possible with modifications to the reward function alone.  In our test on a $2 \times 2$ grid, we changed the policy as in Figure~\ref{envdopt}.  By modifying the reward function to achieve this policy the reward values must be strictly increasing along the path, otherwise it would be optimal to remain put.  This means the reward for the upper-left state must be less than the reward for the lower right (target) state, so the optimal action for lower-left would be to move right rather than up.  However, tweaking the dynamics allows such a policy modification.
+
+\begin{figure}[ht]
+\centerline{\psfig{file=img/envdopt.eps,width=5cm}}
+\caption{\label{envdopt}The original optimal policy (left) and target policy (right).}
+\end{figure}
 
 Our experiments provided experimental verification of our proposed teaching method.  We verified that the method can be used both to speed up the learning process and tested this on policy iteration.  We also found that the method is able to direct the learner to a different policy by changing the dynamics of the environment.
