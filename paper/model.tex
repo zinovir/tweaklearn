@@ -1,0 +1,235 @@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Interaction Model}\label{sec: GeneralModel}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In this section we provide a high level description of the problem and
+general framework.  In the next section we provide a particular
+instantiation of our framework.
+
+Our framework consists of a stochastic environment and two agents, a
+\emph{learner} and a \emph{teacher}.  The learner acts within the
+environment, taking actions and receiving feedback in the form of
+rewards, which depend on the action taken and the current state of the
+environment in which the agent finds itself.  We assume that the
+learner is rational and thus attempts to find a \emph{policy} which
+describes what action to take in each environment state, so as to
+maximises its expected reward.  The teacher, on the other hand, does
+not act \emph{in} the environment, but rather acts \emph{on} the
+environment.  In particular, the teacher has some desired
+\emph{reference policy}, $\pi^*$, that it wishes the learner to
+follow, but is unable to force the agent to take any particular
+action.  Instead, it is able to modify the environment's
+\emph{dynamics} in order to influence the policy choice of the
+learner. That is, the teacher's actions are able to influence the way
+the environment state changes in response to the learner's actions,
+and thus influence the policy of the learner. Dynamics modifications
+come at a cost, however, and thus the goal of the teacher is to
+minimise the modifications it must make to the environment dynamics
+while at the same time ensuring that the policy followed by the
+learner is close enough to the desired reference policy.
+
+We model the problem by $\langle S, A, c,\gamma, U,T\rangle$ where:
+\begin{itemize}
+\item $S$ is the set of states, 
+\item $A$ is the set of actions available to the learner,
+\item  $c:S\times A\times S\rightarrow\mathbf{R}$ is the reward (or
+  cost) function of the learner. $c(s',a,s)$ is the reward received by
+  the learner if it has applied action $a\in A$ and the environment
+  moved from state $s\in S$ to state $s'\in S$,
+\item $\gamma \in (0,1)$ is a discount factor,   
+
+\item $U$ is the set of actions (modifications to the environment)
+  that the teacher can apply and $u_t\in U$ is the modification made
+  at time $t$,
+
+\item $T:S\times A\times U\rightarrow\Delta(S)$ describes the
+  environment dynamics where $T_u(s'|s,a)\equiv T(s'|s,a,u)$ is the
+  probability that the state will change from $s$ to $s'$ if the
+  learner has applied action $a\in A$ and the teacher chose
+  environment modification $u\in U$.
+
+We assume that there exist a null modification $u^0\in U$, so that
+$T^0=T_{u^0}$ are the nominal, passive dynamics of the environment.
+\end{itemize}
+
+
+While applying its iterative policy calculation algorithm, the learner
+faces a sequence of Markov Decision Problems (MDPs)~\cite{puterman_book_94},
+ given by tuples $<S,A,U,T_{u_t},R>$, although it is not aware of the dynamics
+modulation and proceeds as if they were homogeneous. 
+\begin{assume}\label{assume_persistence}
+At every
+stage the learner seeks an action policy of the form
+$\pi:S\rightarrow\Delta(A)$ that would produce the highest expected
+reward if $T_{u_t}$ would persist indefinitely.\footnote{This 
+  assumption is explicit only if the learner actually has access to
+  the environment model. For most standard RL algorithms this
+  assumption would hold implicitly.}
+\end{assume}
+
+
+Let $x_t$ represent all information and features that the learner uses
+in determining its policy, and let
+$\pi_t=\pi(x_t):S\rightarrow\Delta(A)$ be the policy that corresponds
+to that state.  Additionally, let $\pi^*$ be the ideal policy that the
+teacher desires the learner to follow.  At time $t$, the teacher
+incurs a cost, $\mathrm{Cost}(\pi_t,u_t)$, which combines the
+difference between the actual policy being followed by the learner,
+$\pi_t$, and the desired policy of the teacher, $\pi^*$, with the
+amount of environmental modifications the learner has had to make in
+order to maintain the current dynamics, $T_{u_t}$, compared to the
+initial environment dynamics, $T^0$. If we let $x_t=F(x_{t-1},u_t)$
+denote one step of the learner's policy-determination algorithm and
+assume that $x_0$ is known, the overall optimisation problem faced by
+the teacher is:
+\begin{eqnarray*}
+&\min\limits_{u_t}\sum\limits_{t=1}^{t_{max}}Cost(\pi_t,u_t)\\
+&s.t.\\
+&\pi_t=\pi(x_t)\\
+&x_t=F(x_{t-1},u_t)
+\end{eqnarray*}
+
+
+
+%Now, denote $x_t$ the internal state of the learner's policy
+%computation at iteration $t$, and let
+%$\pi_t=\pi(x_t):S\rightarrow\Delta(A)$ be the policy that corresponds
+%to that computation state. Also, denote $\pi^*$ the ideal reference
+%action policy of the learner. Then at time $t$ the teacher incurs cost
+%$Cost(\pi_t,u_t)$ that combines the distance between $\pi_t$ and
+%$\pi^*$ and between $T_{u_t}$ and $T^0$. The overall optimisation
+%problem for the teacher is as follows, where $x_t=F(x_{t-1},u_t)$
+%denotes one step of the learner's computation algorithm and $x_0$ is
+%known:
+%\begin{eqnarray*}
+%&\min\limits_{u_t}\sum\limits_{t=1}^{t_{max}}Cost(\pi_t,u_t)\\
+%&s.t.\\
+%&\pi_t=\pi(x_t)\\
+%&x_t=F(x_{t-1},u_t)
+%\end{eqnarray*}
+
+Notice that the above formulation is generic with respect to the
+actual algorithm employed by the learner agent. The formalism captures
+both policy and value iteration algorithms, both with given and
+learned environment model. It even captures the case where the learner
+is capable of transfer learning. In this case learner's state $x_t$
+will include structural knowledge gathered thus far from the
+interaction with the environment. 
+
+The teacher-learner interaction framework, as we have describe it
+above, can also adopt various cost functions that describe how the
+teacher fuses the environment modification effort and the distance of
+the learner from the reference policy. However, in this work we adopt
+a specific cost function based on the Kullback-Leibler divergence
+rate. This enables a balancing between the two costs. It also
+has the additional benefit to concentrate the cost dependency on those
+portions of the environment dynamics that are most relevant to the
+current action policy choice by the learner. In the following
+subsection we describe our teacher's cost function in more detail.
+
+\subsection{Teacher's Cost Computation}
+
+The cost function we use in this paper is the Kullbank-Leibler divergence rate (KLR) between two processes formed by the application of the teacher's modification, $u_t$, and the learner's policy,
+ $\pi_t$.
+
+
+Specifically, consider 
+%Formally, KLR is defined as the following limit between two
+%stochastic processes $\{X^1_t\}$ and $\{X^2_t\}$:
+%$$
+%KLR(X^1\|X^2)=\lim\limits_{t\rightarrow\infty}\frac{1}{t}D^{KL}(X^1_{1:t}\|X^2_{1:t}),
+%$$
+%
+%where, $D^{KL}$ is the Kullback-Leibler divergence defined by:
+%$$
+%D^{KL}(X^1\|X^2)=\sum\limits_xP(X^1=x)\log\frac{P(X^1=x)}{P(X^2=x)}
+%$$
+%% However, for homogeneous Markovian processes the limit has a closed analytic
+%% form~\cite{rached_alajaji_campbell_2004}. In more detail, consider two
+%% processes over an abstract space $X$, described by two conditional
+%% transition matrices $P$ and $Q$, so that $P(x'|x)$ (respectively
+%% $Q(x'|x)$) is the probability of transition from state $x$ to state
+%% $x'$. Then the following holds:
+%% $$KLR(P\|Q)=\sum\limits_{x\in X}p_{stat}(x)D^{KL}(P(\cdot|x)\|Q(\cdot|x))$$
+%% Now, to apply KLR to our model we will 
+%% consider 
+the stochastic process over the state-action pairs formed by the
+repeated application of the learner's policy in the environment
+modified by $u_t$. This results in  a homogeneous Markovian process captured 
+by the transition matrix: \\ \centerline{$
+  P_t(s',a'|s,a)=T_{u_t}(s'|s,a)\pi_t(a'|s') $}
+
+Similarly, define $P^*(s',a'|s,a)=T^0(s'|s,a)\pi^*(a'|s')$ to be the
+ideal stochastic process over the state-action pairs, which is formed when the teacher's desired policy is applied with the passive environment dynamics.\footnote{Note that this is the optimal situation from the perspective of the teacher -- its desired policy is used and it has to make no modifications to the environment.} 
+
+ Assuming that
+$P_t$ and $P^*$ are irreducible w.r.t. $S\times A$ the
+Kullback-Leibler divergence rate, $KLR$, can be
+computed~\cite{rached_alajaji_campbell_2004} to form the necessary
+cost function as follows:
+$$
+Cost(u_t,\pi_t)=KLR(P_t\|P^*)=\sum\limits_{s,a}q_t(s,a)D^{KL}_t(s,a),$$
+where
+$D^{KL}_t(s,a)=D^{KL}(P_t(\cdot,\cdot|s,a)\|P^*(\cdot,\cdot|s,a))$ is
+the Kullabck-Leibler divergence between columns of $P_t$ and $P^*$,
+and $q_t$ is the stationary distribution of $P_t$, so that
+$q_t=P_tq_t$. Notably, the
+stationary distribution can be decomposed (with a slight abuse of
+notation) $q_t(s,a)=q_t(a|s)q_t(s)$ and then expressed by the
+following equations:
+%% \begin{eqnarray*}
+%% q_t&=&q_t(a'|s')q_t(s')=P_tq_t\\
+%% &=&\sum\limits_{s,a}T_{u_t}(s'|s,a)\pi_t(a'|s')q_t(a|s)q_t(s)\\
+%% &=&\pi_t(a'|s')\sum\limits_sq_t(s)\sum\limits_aT_{u_t}(s'|s,a)q_t(a|s)\\
+%% &&\{\displaystyle{substitute}\ \ q_t(\cdot|\cdot)\Leftarrow\pi_t(\cdot|\cdot)\}\\
+%% &=&\pi_t(a'|s')\sum\limits_sq_t(s)\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)\\
+%% &&\{\displaystyle{denote}\ \ \Tilde{T}_{u_t}(s'|s)=\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)\}\\
+%% &=&\pi_t(a'|s')\sum\limits_sq_t(s)\Tilde{T}_{u_t}(s'|s)
+%% \end{eqnarray*}
+%% so that
+\begin{eqnarray*}
+q_t(s',a')&=&\pi_t(a'|s')q_t(s')\ \ \displaystyle{where}\\
+q_t(s')&=&\sum\limits_s\Tilde{T}_{u_t}(s'|s)q_t(s) \ \ \displaystyle{and}\\
+\Tilde{T}_{u_t}(s'|s)&=&\sum_{a}T_{u_t}(s'|s,a)\pi_t(a|s)
+\end{eqnarray*}
+
+Incorporating our KLR-based cost function, the overall generic Teacher
+Optimisation Problem (TOP) is depicted in Figure~\ref{t_opt}. Notice
+that this formulation retains complete flexibility with respect to the
+specific algorithm selected by the learner to optimise its
+policy. Nevertheless, to provide further intuition and demonstrate the
+feasibility of the approach, in the rest of this paper we instantiate
+the algorithm $F$ to be the Policy Iteration algorithm. However,
+before we proceed to this particular instantiation, we would like to
+remarks upon the meaning of KLR and KLD in our teaching problem.
+
+Originally, $KL$ divergence (and KRL) was designed to measure the cost
+of mistaken encoding. That is, if a signal had come from a
+distribution $P$, while we have used a distribution $Q$ to encode it,
+$KL(P\|Q)$ measures the extra bits we had to
+use\cite{cover_thomas_IT_book_91}. Therefore, given the signal,
+information theory seeks to recover $Q$ to minimise the extra cost. In
+our teaching domain, the signal is the sequence of state-action pairs
+engendered by the system dynamics and the learning algorithm. However,
+by changing the system dynamics we essentially change the signal true
+distribution, rather than its encoding. Hence, we represent the ideal
+policy and the passive dynamics as the encoding distribution $Q$,
+while we modulate the signal distribution $P$ to match it.
+
+\begin{figure}[ht]
+\begin{tabular}{|c|} \hline \parbox{3.2 in} {\center 
+$\arg\min\limits_{u_t}\sum\limits_{t=1}^{t_{max}}\sum\limits_{s,a}\pi_t(a|s)q_t(s)D^{KL}_t(s,a)$\\
+s.t.\\
+$\pi_t=\pi(x_t)$\\
+$x_t=F(x_{t-1},u_t)$\\
+$x_0\ \ \displaystyle{is\ \ given}$\\
+$D^{KL}_t(s,a)=\sum\limits_{s',a'}T_{u_t}(s'|a,s)\pi_t(a'|s')\log\frac{T_{u_t}(s'|a,s)\pi_t(a'|s')}{T^0(s'|a,s)\pi^*(a'|s')}$\\
+$q_t(s')=\sum\limits_s\Tilde{T}_{u_t}(s'|s)q_t(s)$\\
+$\Tilde{T}_{u_t}(s'|s)=\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)$\\\ \\
+}\\ \hline \end{tabular}
+\caption{\label{t_opt}The complete generic TOP}
+\end{figure}
+
+
