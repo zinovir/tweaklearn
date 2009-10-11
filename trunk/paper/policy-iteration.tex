@@ -1,0 +1,48 @@
+
+\section{TOP with Policy Iteration}\label{sec: TOP-PI}
+The policy iteration (PI) algorithm is an iterative 
+algorithm that operates over an explicitly given MDP. Given the policy
+of the previous iteration, $\pi_{t-1}$, PI first computes 
+the value function $V_t(s)$ for that policy, where  $V_t(s)$ represents
+the expected total discounted reward that can be achieved if the
+environment starts at state $s$ and the agent follows $\pi_{t-1}$.
+PI then computes $\pi_{t}$, which is optimal policy, given the $V_t(s)$.
+Formally instantiating our
+learner's state update $F(x_t,u)$ by PI leads to the following set of
+equations:
+{\center 
+$V_t(s)=\sum\limits_{s'}T_{u_t}(s'|s,\pi_{t-1}(s))\left[
+c(s',\pi_{t-1}(s),s)+\gamma V_t(s')
+\right]$\\
+$\pi_t(a|s)=\frac{1}{Z_t(s)}\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
+c(s',a,s)+\gamma V_t(s')
+\right]\right)$\\
+$Z_t(s)=\sum\limits_a\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
+c(s',a,s)+\gamma V_t(s')
+\right]\right)$\\
+}
+The parameter $\tau_t$ denotes a temperature scale that
+shifts the soft-max towards the greedy maximum selection. Substituting
+the above into the standard TOP formulation leads to a TOP-PI
+optimisation problem depicted in Figure~\ref{t_opt_PI}.
+\begin{figure}[th]
+\begin{tabular}{|c|} \hline \parbox{3.2 in} {\center 
+$\arg\min\limits_{u_t}\sum\limits_{t=1}^{t_{max}}\sum\limits_{s,a}\pi_t(a|s)q_t(s)D^{KL}_t(s,a)$\\
+$s.t.$\\
+$V_t(s)=\sum\limits_{s'}T_{u_t}(s'|s,\pi_{t-1}(s))\left[
+c(s',\pi_{t-1}(s),s)+\gamma V_t(s')
+\right]$\\
+$\pi_t(a|s)=\frac{\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
+c(s',a,s)+\gamma V_t(s')
+\right]\right)}{Z_t(s)}$\\
+$Z_t(s)=\sum\limits_a\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
+c(s',a,s)+\gamma V_t(s')
+\right]\right)$\\
+$\pi_0\ \ \displaystyle{given}$\\
+$D^{KL}_t(s,a)=\sum\limits_{s',a'}T_{u_t}(s'|a,s)\pi_t(a'|s')\log\frac{T_{u_t}(s'|a,s)\pi_t(a'|s')}{T^0(s'|a,s)\pi^*(a'|s')}$\\
+$q_t(s')=\sum\limits_s\Tilde{T}_{u_t}(s'|s)q_t(s)$\\
+$\Tilde{T}_{u_t}(s'|s)=\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)$\\\ \\
+}\\ \hline \end{tabular}
+\caption{\label{t_opt_PI}TOP-PI: The complete and explicit TOP for the
+  PI learner}
+\end{figure}

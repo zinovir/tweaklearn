@@ -1,0 +1,81 @@
+
+
+\section{Introduction}
+%\nocite{fleming_hernandez-hernandez_CDC_97}
+%\nocite{todorov_2009_framework_sup}
+%\nocite{todorov_2009_framework}
+%\nocite{ng_russell_2000}
+%\nocite{zhang_parkes_2009_ed}
+%\nocite{dufton_larson_2009}
+
+There are three main teaching techniques applied by people: by
+demonstration, by incentive, by environment dynamics
+modification. While the
+first two have been mapped into intelligent agent models, to the best
+of our knowledge, the third one has yet to be instantiated.
+
+Teaching by demonstration has found a significant expression in
+robotics~\cite{argal_etal_2009}. However, these mostly assume that the
+learner actually wishes to learn the task, as well as a certain
+benevolence on behalf of the teacher with respect to the learned
+task.
+
+On the other hand, teaching by incentive has been formalised in a way
+that allows to the teacher to have an interest that may contradict
+that of the learner. In more detail, recently, Zhang \emph{et al}
+introduced a general framework for \emph{environment
+  design}~\cite{Zhang09:General}. In environment design an interested
+party attempts to influence the behaviour of an agent by making limited
+changes to the agent's environment. Although in general this may
+include environment dynamics modification, Zhang \emph{et al} have
+concentrated on teaching by incentive. In particular, Zhang \emph{et
+  al} have allowed their interested party to modify the cost function
+of an agent in a linear programming example~\cite{Zhang09:General}, or
+to modify the rewards of an agent acting in an environment modelled as
+an MDP~\cite{zhang_parkes_2008,Zhang09:Policy}.
+
+In this paper we explicitly focus on the the implications of allowing
+the interested party (teacher, in our model) to modify the
+\emph{dynamics} of the environment, while leaving the reward function
+of the agent alone. We first introduce a way to measure the divergence
+between the realised and the passive (when no modification is applied
+by the teacher) environment developments in a Markovian system. This
+measure naturally incorporates and balances the teacher's effort and
+the deviation of the learner's performance from an ideal reference,
+that which the teacher is interested in. It also allows us to
+formulate the teacher's problem as a planning and control problem, and
+solve it using classical analytical and numerical tools.
+
+
+While our model may be cast as an example of environment design, we
+note that our instantiation differs significantly from the particular
+cases studied by Zhang \emph{et al}, and therefore creates a separate
+line of study. In fact, representing the teacher's task as a control
+problem is far more reminiscent of the work by Banerjee and
+Peng~\cite{banerjee_peng_2005}, although it too focuses on the reward
+modification.
+
+To realise the necessity and importance of teaching by
+environment dynamics modification consider the following real life
+scenario. A parent wishes to teach a child to ride a bicycle. The
+parent may {\em demonstrate} by riding the bicycle. However, in
+practice, this does not yield good results when the child attempt to
+repeat the task. It is also possible to promise an {\em incentive}, be
+that a candy or a trip to the movies. Unfortunately, although
+increasing the child's efforts, this does not facilitate the learning
+process. The most practical thing to do in this case, is to {\em
+  modify the dynamics} -- add safety wheels to the bicycle. Gradually
+raising the safety wheels, allows the child to accustom to the
+complete range of motion possibilities and, eventually, ride an
+unabridged bicycle version.
+
+In what follows we will formally define teaching by dynamics
+modification given a learning algorithm we wish to teach
+(Section~\ref{sec: GeneralModel}). We will also provide a specialised
+version of the formalism for a specific MDP solution technique --
+Policy Iteration (PI) algorithm (Section~\ref{sec: TOP-PI}). $\{\{$
+Our experiments in Section~\ref{sec: experiments} will compare the
+performance of PI with and without dynamics modification. $\}\}$. We
+will then conclude in Section~\ref{sec: future work} with a discussion
+of further development teaching by dynamics modification.
+
