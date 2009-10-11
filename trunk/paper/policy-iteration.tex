@@ -1,30 +1,66 @@
 
 \section{TOP with Policy Iteration}\label{sec: TOP-PI}
-The policy iteration (PI) algorithm is an iterative 
-algorithm that operates over an explicitly given MDP. Given the policy
-of the previous iteration, $\pi_{t-1}$, PI first computes 
-the value function $V_t(s)$ for that policy, where  $V_t(s)$ represents
-the expected total discounted reward that can be achieved if the
-environment starts at state $s$ and the agent follows $\pi_{t-1}$.
-PI then computes $\pi_{t}$, which is optimal policy, given the $V_t(s)$.
-Formally instantiating our
-learner's state update $F(x_t,u)$ by PI leads to the following set of
-equations:
-{\center 
-$V_t(s)=\sum\limits_{s'}T_{u_t}(s'|s,\pi_{t-1}(s))\left[
-c(s',\pi_{t-1}(s),s)+\gamma V_t(s')
-\right]$\\
+The standard policy iteration (PI) algorithm is an iterative algorithm
+that operates over an explicitly given MDP\cite{puterman_book_94}, and
+it has two principal stages: policy evaluation and policy
+improvement. At the the {\em policy evaluation} stage PI computes the
+reward gained by applying currently considered policy. Specifically,
+given the policy of the previous iteration, $\pi_{t-1}$, the value
+function $V_t(s)$ for that policy is computed, where $V_t(s)$
+represents the expected total discounted reward that can be achieved
+if the environment starts at state $s$ and the agent follows
+$\pi_{t-1}$. At the {\em policy improvement} stage the value function
+of the current policy is used to guide the computation of the next
+stage policy. Commonly, it is a policy $\pi_{t}$, which is optimal
+policy, given the $V_t(s)$.
+
+Since its original introduction, both stages of the algorithm have
+been refined to enable partial knowledge of the domain or introduce
+conservative safety features. For instance, the value function can be
+estimated, rather than computed, in environment where a direct
+computation is too complex or impossible due to poor modelling by the
+learner. Another possible extension is introduction of safety features
+into the calculations of the new policy (e.g risk aversion). Such
+modifications have been extensively used, particularly in robotics,
+leading to more and more advanced methods (see
+e.g.~\cite{sugiyama_et_al_2009}). Hence, by making basic PI method our
+study subject in this paper, we intend to impact a large cross-cut of
+applications where these learning techniques are used in a
+teacher-learner (or leader-follower) setup.
+
+In more detail, we consider the standard PI algorithm, where the
+environment model is completely known and the value function is
+directly computed. However, for the reasons of computational
+convenience, we do introduce a modification into the policy
+improvement stage. Namely, the new policy is computed as a
+soft-maximisation with respect to the value function. This is done to
+support differentiability of the policy with respect to the
+environment dynamics\footnote{Quite commonly PI is used in combination
+  with a form of neural-network computation, where soft-max is a
+  natural property. As a reslt our modification does not breach the
+  boundaries of the acceptable practice.}.
+Formally instantiating our learner's state update $F(x_t,u)$ by PI
+leads to the following set of equations:\\\ \\
+{\em Policy evaluation:}\\
+\centerline{
+  $V_t(s)=\sum\limits_{s'}T_{u_t}(s'|s,\pi_{t-1}(s))\left[
+    c(s',\pi_{t-1}(s),s)+\gamma V_t(s')
+    \right]$}
+{\em Policy improvement:}\\
+\centerline{
 $\pi_t(a|s)=\frac{1}{Z_t(s)}\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
-c(s',a,s)+\gamma V_t(s')
-\right]\right)$\\
+    c(s',a,s)+\gamma V_t(s')
+    \right]\right)$}
+{\em Normalisation factor:}\\ 
+\centerline{
 $Z_t(s)=\sum\limits_a\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
-c(s',a,s)+\gamma V_t(s')
-\right]\right)$\\
-}
-The parameter $\tau_t$ denotes a temperature scale that
-shifts the soft-max towards the greedy maximum selection. Substituting
-the above into the standard TOP formulation leads to a TOP-PI
-optimisation problem depicted in Figure~\ref{t_opt_PI}.
+    c(s',a,s)+\gamma V_t(s') \right]\right)$}
+
+The parameter
+$\tau_t$ denotes a temperature scale that shifts the soft-max towards
+the greedy maximum selection. Substituting the above into the standard
+TOP formulation leads to a TOP-PI optimisation problem depicted in
+Figure~\ref{t_opt_PI}.
 \begin{figure}[th]
 \begin{tabular}{|c|} \hline \parbox{3.2 in} {\center 
 $\arg\min\limits_{u_t}\sum\limits_{t=1}^{t_{max}}\sum\limits_{s,a}\pi_t(a|s)q_t(s)D^{KL}_t(s,a)$\\
