@@ -11,7 +11,8 @@ represents the expected total discounted reward that can be achieved
 if the environment starts at state $s$ and the agent follows
 $\pi_{t-1}$. At the {\em policy improvement} stage the value function
 of the current policy is used to guide the computation of the next
-stage policy. Commonly, it is a policy, $\pi_{t}$, optimal with respect to the currect value function, $V_t(s)$.
+stage policy. Commonly, it is a policy, $\pi_{t}$, optimal with
+respect to the currect value function, $V_t(s)$.
 
 Since its original introduction, both stages of the algorithm have
 been refined to enable partial knowledge of the domain or introduce
@@ -32,12 +33,24 @@ environment model is completely known and the value function is
 directly computed. However, for the reasons of computational
 convenience, we do introduce a modification into the policy
 improvement stage. Namely, the new policy is computed as a
-soft-maximisation with respect to the value function. This is done to
-support differentiability of the policy with respect to the
-environment dynamics\footnote{Quite commonly PI is used in combination
-  with a form of neural-network computation, where soft-max is a
-  natural property. As a reslt our modification does not breach the
-  boundaries of the acceptable practice.}.
+soft-maximisation with respect to the value function. The soft-max
+function we use is that of Gibbs-Boltzmann, where a vector
+$\mathbf{v}=(v_1,...,v_k)$ is tranformed into a normalised vector
+$\sigma(\mathbf{v}|\tau)$ proportional to $(\exp(\tau
+v_1),...,\exp(\tau v_k))$. The parameter $\tau_t$ denotes a so called
+{\em temperature} scale that shifts the soft-max towards the greedy
+maximum selection, i.e. if we let
+$\lim\limits_{\tau\rightarrow\infty}\sigma(\mathbf{v}|\tau)=\sigma^*$,
+then $\sigma^*_j\neq 0$ iff $j\in\arg\max\limits_{1\leq i\leq k}v_i$.
+
+This is done to support differentiability of the policy with respect
+to the environment dynamics. Although it may appear as a significant
+modification to the standard PI algorithm, it is in fact a quite
+common practice. This is due to the fact that PI is frequently used in
+combination with a form of neural-network computation to represent
+either the policy or the value function, and in such representations
+soft-max occurs naturally.
+
 Formally instantiating our learner's state update $F(x_t,u)$ by PI
 leads to the following set of equations:\\\ \\
 {\em Policy evaluation:}\\
@@ -55,9 +68,7 @@ $\pi_t(a|s)=\frac{1}{Z_t(s)}\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left
 $Z_t(s)=\sum\limits_a\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
     c(s',a,s)+\gamma V_t(s') \right]\right)$}
 
-The parameter
-$\tau_t$ denotes a temperature scale that shifts the soft-max towards
-the greedy maximum selection. Substituting the above into the standard
+Substituting the above into the standard
 TOP formulation leads to a TOP-PI optimisation problem depicted in
 Figure~\ref{t_opt_PI}.
 \begin{figure}[th]
