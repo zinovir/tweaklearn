@@ -40,11 +40,11 @@ experiments are directed to verify this proposition using our TOP-PI
 formalism.  We also test the efficacy of directing the agent to follow
 a specific path, different to the optimal, from $S$ to $T$ using TOP-PI.
 
-For our experimental verification we consider a $4 \times 4$ grid world where the learner can move in any cardinal direction or stay put.  Each cell has a randomly assigned elevation, shown in Figure~\ref{probalt.eps}, that modifies the dynamics of each action as described above.  The learner has a reward of $+1$ for any actions ending in the target state and $-1$ otherwise.  This results in an optimal policy of heading toward the target state in the shortest number of steps (see Figure~\ref{prevopt}).  The learner uses policy iteration to find a policy maximising expected discounted sum of future rewards.  The teacher can arbitrarily modify the underlying dynamics of the environment
+For our experimental verification we consider a $4 \times 4$ grid world where the learner can move in any cardinal direction or stay put.  Each cell has a randomly assigned elevation, shown in Figure~\ref{probalt}, that modifies the dynamics of each action as described above.  The learner has a reward of $+1$ for any actions ending in the target state and $-1$ otherwise.  This results in an optimal policy of heading toward the target state in the shortest number of steps (see Figure~\ref{prevopt}).  The learner uses policy iteration to find a policy maximising expected discounted sum of future rewards.  The teacher can arbitrarily modify the underlying dynamics of the environment
 
 \begin{figure}[ht]
 \centerline{\psfig{file=img/probalt.eps,width=5cm}}
-\caption{\label{probalt}The 3D terrain used.}
+\caption{\label{probalt}The unmodified 3D terrain.}
 \end{figure}
 
 \begin{figure}[ht]
@@ -59,7 +59,12 @@ In our test environment, the information about the reward state can take multipl
 \caption{\label{newopt}A target policy that avoids centre cells.}
 \end{figure}
 
-We also tested modifying the optimal policy of the MDP through tweaked dynamics.  Our test problem modified the optimal policy from a simple shortest path to the reward state to one that avoids the centre states and follows the edge states to the goal (see Figure~\ref{newopt}).  Our tests showed that this policy modification was achieved through the modifications, provided by the teacher, to the environment dynamics.   With the teacher using TOP-PI on the new target policy, the learner found this new policy using Policy Iteration in $4$ iterations.  In this domain with a maximum number of policy iterations for TOP-PI of $4$ the modifications to the dynamics tended to quite large, with the average change in each entry of the environmental dynamics $T$ ranging from $0.058$ in the first iteration to $0.036$ in the final iteration.
+\begin{figure}[ht]
+\centerline{\psfig{file=img/newalt.eps,width=5cm}}
+\caption{\label{newalt}An impression of the new terrain corresponding to the modified dynamics at the final iteration.}
+\end{figure}
+
+We also tested modifying the optimal policy of the MDP through tweaked dynamics.  Our test problem modified the optimal policy from a simple shortest path to the reward state to one that avoids the centre states and follows the edge states to the goal (see Figure~\ref{newopt}).  Our tests showed that this policy modification was achieved through the modifications, provided by the teacher, to the environment dynamics.   With the teacher using TOP-PI on the new target policy, the learner found this new policy using Policy Iteration in $4$ iterations.  Although in these experiments the terrain is not modified explicitly, an impression of the new terrain based on the tweaked dynamics of the final policy iteration is shown in Figure~\ref{newalt}.  In this domain with a maximum number of policy iterations for TOP-PI of $4$ the modifications to the dynamics tended to quite large, with the average change in each entry of the environmental dynamics $T$ ranging from $0.058$ in the first iteration to $0.036$ in the final iteration.
 
 This policy modification method allows changes that are not possible with modifications to the reward function alone.  In our test on a $2 \times 2$ grid, we changed the policy as in Figure~\ref{envdopt}.  By modifying the reward function to achieve this policy the reward values must be strictly increasing along the path, otherwise it would be optimal to remain put.  This means the reward for the upper-left state must be less than the reward for the lower right (target) state, so the optimal action for lower-left would be to move right rather than up.  However, tweaking the dynamics allows such a policy modification.
 
