@@ -1,32 +1,49 @@
 
 \section{TOP with Policy Iteration}\label{sec: TOP-PI}
+
+In this section we discuss how we instantiate our general model so that the learner is using a \emph{policy iteration} algorithm.
 The standard policy iteration (PI) algorithm is an iterative algorithm
-that operates over an explicitly given MDP\cite{puterman_book_94}, and
-it has two principal stages: policy evaluation and policy
-improvement. At the the {\em policy evaluation} stage PI computes the
-reward gained by applying currently considered policy. Specifically,
+that operates over an explicitly given MDP\cite{puterman_book_94}.  It consists of two principal stages:
+\begin{description}
+\item[Policy Evaluation] where the algorithm computes the reward of the agent if it applies its current policy in the given MDP. Specifically,
 given the policy of the previous iteration, $\pi_{t-1}$, the value
 function $V_t(s)$ for that policy is computed, where $V_t(s)$
 represents the expected total discounted reward that can be achieved
 if the environment starts at state $s$ and the agent follows
-$\pi_{t-1}$. At the {\em policy improvement} stage the value function
+$\pi_{t-1}$.
+
+\item[Policy Improvement]  where the value function
 of the current policy is used to guide the computation of the next
 stage policy. Commonly, it is a policy, $\pi_{t}$, optimal with
 respect to the currect value function, $V_t(s)$.
+\end{description}
+
+%and
+%it has two principal stages: policy evaluation and policy
+%improvement. At the the {\em policy evaluation} stage PI computes the
+%reward gained by applying currently considered policy. Specifically,
+%given the policy of the previous iteration, $\pi_{t-1}$, the value
+%function $V_t(s)$ for that policy is computed, where $V_t(s)$
+%represents the expected total discounted reward that can be achieved
+%if the environment starts at state $s$ and the agent follows
+%$\pi_{t-1}$. At the {\em policy improvement} stage the value function
+%of the current policy is used to guide the computation of the next
+%stage policy. Commonly, it is a policy, $\pi_{t}$, optimal with
+%respect to the currect value function, $V_t(s)$.
 
 Since its original introduction, both stages of the algorithm have
-been refined to enable partial knowledge of the domain or introduce
-conservative safety features. For instance, the value function can be
-estimated, rather than computed, in environment where a direct
+been refined to allow for partial knowledge of the domain.
+ For instance, the value function can be
+estimated, rather than computed, in environments where a direct
 computation is too complex or impossible due to poor modelling by the
-learner. Another possible extension is introduction of safety features
-into the calculations of the new policy (e.g risk aversion). Such
+learner[REFS]. Another  extension has been the  introduction of safety features
+into the calculations of the new policy (e.g risk aversion)[REFS]. Such
 modifications have been extensively used, particularly in robotics,
-leading to more and more advanced methods (see
-e.g.~\cite{sugiyama_et_al_2009}). Hence, by making basic PI method our
-study subject in this paper, we intend to impact a large cross-cut of
+leading to more and more advanced policy iteration algorithms (see, for example, ~\cite{sugiyama_et_al_2009}). Hence, by making the basic PI method our
+study subject in this paper, we intend to impact a large swathe of
 applications where these learning techniques are used in a
 teacher-learner (or leader-follower) setup.
+
 
 In more detail, we consider the standard PI algorithm, where the
 environment model is completely known and the value function is
@@ -40,33 +57,49 @@ $\sigma(\mathbf{v}|\tau)$ proportional to $(\exp(\tau
 v_1),...,\exp(\tau v_k))$. The parameter $\tau_t$ denotes a so called
 {\em temperature} scale that shifts the soft-max towards the greedy
 maximum selection, i.e. if we let
-$\lim\limits_{\tau\rightarrow\infty}\sigma(\mathbf{v}|\tau)=\sigma^*$,
-then $\sigma^*_j\neq 0$ iff $j\in\arg\max\limits_{1\leq i\leq k}v_i$.
+\[
+\lim\limits_{\tau\rightarrow\infty}\sigma(\mathbf{v}|\tau)=\sigma^*,
+\]
+then 
+\[\sigma^*_j\neq 0 \mbox{ iff } j\in\arg\max\limits_{1\leq i\leq k}v_i.\]
 
 This is done to support differentiability of the policy with respect
-to the environment dynamics. Although it may appear as a significant
-modification to the standard PI algorithm, it is in fact a quite
-common practice. This is due to the fact that PI is frequently used in
+to the environment dynamics, and is a standard modification to the PI algorithm (see, for example[REF]).   
+This is due to the fact that PI is frequently used in
 combination with a form of neural-network computation to represent
 either the policy or the value function, and in such representations
-soft-max occurs naturally.
+soft-max occurs naturally[REF].
 
 Formally instantiating our learner's state update $F(x_t,u)$ by PI
-leads to the following set of equations:\\\ \\
-{\em Policy evaluation:}\\
-\centerline{
-  $V_t(s)=\sum\limits_{s'}T_{u_t}(s'|s,\pi_{t-1}(s))\left[
+leads to the following set of equations: %\\\ \\
+\begin{description}
+\item[Policy evaluation:]
+%{\em Policy evaluation:}\\
+%\centerline{
+  \[V_t(s)=\sum\limits_{s'}T_{u_t}(s'|s,\pi_{t-1}(s))\left[
     c(s',\pi_{t-1}(s),s)+\gamma V_t(s')
-    \right]$}
-{\em Policy improvement:}\\
-\centerline{
-$\pi_t(a|s)=\frac{1}{Z_t(s)}\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
+    \right]\]
+    %}
+
+\item[Policy improvement:]
+\[\pi_t(a|s)=\frac{1}{Z_t(s)}\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
     c(s',a,s)+\gamma V_t(s')
-    \right]\right)$}
-{\em Normalisation factor:}\\ 
-\centerline{
-$Z_t(s)=\sum\limits_a\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
-    c(s',a,s)+\gamma V_t(s') \right]\right)$}
+    \right]\right) \]
+    
+\item[Normalisation factor:]
+\[Z_t(s)=\sum\limits_a\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
+    c(s',a,s)+\gamma V_t(s') \right]\right)\]
+\end{description}
+    
+%{\em Policy improvement:}\\
+%\centerline{
+%$\pi_t(a|s)=\frac{1}{Z_t(s)}\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
+%    c(s',a,s)+\gamma V_t(s')
+%    \right]\right)$}
+%{\em Normalisation factor:}\\ 
+%\centerline{
+%$Z_t(s)=\sum\limits_a\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
+%    c(s',a,s)+\gamma V_t(s') \right]\right)$}
 
 Substituting the above into the standard
 TOP formulation leads to a TOP-PI optimisation problem depicted in
