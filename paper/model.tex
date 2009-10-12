@@ -24,13 +24,13 @@ action.  Instead, it is able to modify the environment's
 \emph{dynamics} in order to influence the policy choice of the
 learner. That is, the teacher's actions are able to influence the way
 the environment state changes in response to the learner's actions,
-and thus influence the policy of the learner. Dynamics modifications
+and thus influence the policy of the learner. Dynamics modifications, or \emph{tweaks}, 
 come at a cost, however, and thus the goal of the teacher is to
 minimise the modifications it must make to the environment dynamics
 while at the same time ensuring that the policy followed by the
 learner is close enough to the desired reference policy.
 
-We model the problem by $\langle S, A, c,\gamma, U,T\rangle$ where:
+We represent  the problem with the tuple  $\langle S, A, c,\gamma, U,T\rangle$ where:
 \begin{itemize}
 \item $S$ is the set of states, 
 \item $A$ is the set of actions available to the learner,
@@ -41,7 +41,7 @@ We model the problem by $\langle S, A, c,\gamma, U,T\rangle$ where:
 \item $\gamma \in (0,1)$ is a discount factor,   
 
 \item $U$ is the set of actions (modifications to the environment)
-  that the teacher can apply and $u_t\in U$ is the modification made
+  that the teacher can apply where $u_t\in U$ is the modification or tweak made
   at time $t$,
 
 \item $T:S\times A\times U\rightarrow\Delta(S)$ describes the
@@ -50,22 +50,23 @@ We model the problem by $\langle S, A, c,\gamma, U,T\rangle$ where:
   learner has applied action $a\in A$ and the teacher chose
   environment modification $u\in U$.
 
-We assume that there exist a null modification $u^0\in U$, so that
-$T^0=T_{u^0}$ are the nominal, passive dynamics of the environment.
+We assume that there exists a null modification $u^0\in U$, so that
+$T^0=T_{u^0}$  are the original dynamics of the environment before any teacher-modifications. We will use the term \emph{passive dynamics} to refer to $T^0$ to highlight the fact that it is unchanged.
+
 \end{itemize}
 
-
-While applying its iterative policy calculation algorithm, the learner
-faces a sequence of Markov Decision Problems (MDPs)~\cite{puterman_book_94},
- given by tuples $<S,A,U,T_{u_t},R>$, although it is not aware of the dynamics
-modulation and proceeds as if they were homogeneous. 
+We assume that the learner modifies and updates its policy by using some iterative algorithm, such as value or policy iteration.  In between iterations, the teacher is able to apply a tweak or modification to the environment dynamics, and thus, the learner faces 
+ a sequence of Markov Decision Problems (MDPs)~\cite{puterman_book_94},
+ given by tuples $<S,A,U,T_{u_t},R>$. We assume that the learner is unaware of the teacher's  actions, and thus proceeds as if the sequence of MDPs were homogeneous.
+ 
+ 
 \begin{assume}\label{assume_persistence}
 At every
 stage the learner seeks an action policy of the form
 $\pi:S\rightarrow\Delta(A)$ that would produce the highest expected
 reward if $T_{u_t}$ would persist indefinitely.\footnote{This 
   assumption is explicit only if the learner actually has access to
-  the environment model. For most standard RL algorithms this
+  the environment model. For most standard reinforcement learning algorithms this
   assumption would hold implicitly.}
 \end{assume}
 
@@ -82,13 +83,13 @@ amount of environmental modifications the learner has had to make in
 order to maintain the current dynamics, $T_{u_t}$, compared to the
 initial environment dynamics, $T^0$. If we let $x_t=F(x_{t-1},u_t)$
 denote one step of the learner's policy-determination algorithm and
-assume that $x_0$ is known, the overall optimisation problem faced by
-the teacher is:
+assume that $x_0$, the original state of the learner,  is known, then it is possible to formulate the overall optimisation problem faced by the teacher.
+In particular, it is:
 \begin{eqnarray*}
 &\min\limits_{u_t}\sum\limits_{t=1}^{t_{max}}Cost(\pi_t,u_t)\\
 &s.t.\\
 &\pi_t=\pi(x_t)\\
-&x_t=F(x_{t-1},u_t)
+&x_t=F(x_{t-1},u_t).
 \end{eqnarray*}
 
 
@@ -110,24 +111,16 @@ the teacher is:
 %&x_t=F(x_{t-1},u_t)
 %\end{eqnarray*}
 
-Notice that the above formulation is generic with respect to the
-actual algorithm employed by the learner agent. The formalism captures
-both policy and value iteration algorithms, both with given and
-learned environment model. It even captures the case where the learner
-is capable of transfer learning. In this case learner's state $x_t$
+This formulation of the teacher's optimization function is fully generic. It does not explicitly specify the learner's algorithm beyond assuming that it is iterative. This formalism thus captures both policy and value iteration algorithms, both with given and learned environment models.
+It can also
+ capture the case where the learner
+is capable of transfer learning~\cite{ taylor_stone_2009}. In this scenario the learner's state $x_t$
 will include structural knowledge gathered thus far from the
 interaction with the environment. 
 
-The teacher-learner interaction framework, as we have describe it
-above, can also adopt various cost functions that describe how the
-teacher fuses the environment modification effort and the distance of
-the learner from the reference policy. However, in this work we adopt
-a specific cost function based on the Kullback-Leibler divergence
-rate. This enables a balancing between the two costs. It also
-has the additional benefit to concentrate the cost dependency on those
-portions of the environment dynamics that are most relevant to the
-current action policy choice by the learner. In the following
-subsection we describe our teacher's cost function in more detail.
+Our teacher-learner interaction framework, as described, is also generic with respect to the instantiation of the teacher's cost function, $Cost(\pi_t,u_t)$. We argue that suitable cost functions for this problem should incorporate information as to what environmental modifications the teacher has performed (\emph{i.e.} the actions taken by the teacher), along with information about how similar the policy of the learner is to the desired policy of the teacher (\emph{i.e.} how far the teacher is from its goal). While any function which combines these features in a meaningful way would work, in this paper we adopt a specific cost function derived from the \emph{Kullback-Leibler Divergence Rate}.    We describe our proposed cost function in more detail in the next section.
+
+
 
 \subsection{Teacher's Cost Computation}
 
