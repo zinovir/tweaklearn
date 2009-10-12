@@ -112,8 +112,12 @@ find the shortest path policy, in spite of the new target policy being
 a distorted one.  Although in these experiments the tweaked dynamics
 were not computed based on some underlying terrain, the tweaked
 dynamics of the final policy iteration are visualised by a terrain
-impression shown in Figure~\ref{newalt}. In this domain with a
-maximum number of policy iterations for TOP-PI of $4$ the
+impression shown in Figure~\ref{newalt}.  Note the lowering of the two
+centre states furthest from the target.  This creates a ``hole'' that
+the learner would wish to avoid as it would be difficult to exit.  
+Also, the upper-right centre square is the lowest to discourage the 
+learner from moving there should it fall in the hole. In this domain 
+with a maximum number of policy iterations for TOP-PI of $4$ the
 modifications to the dynamics tended to be relatively reasonable, with the
 average change in each entry of the environmental dynamics $T$ ranging
 from $0.058$ in the first iteration to $0.036$ in the final iteration.
