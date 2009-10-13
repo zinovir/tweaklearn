@@ -39,7 +39,12 @@ concentrated on teaching by incentive. In particular, Zhang \emph{et
 of an agent in a linear programming example~\cite{Zhang09:General}, or
 to modify the rewards of an agent acting in an environment modelled as
 a Markov Decision Problem
-(MDP)~\cite{zhang_parkes_2008,Zhang09:Policy}.
+(MDP)~\cite{zhang_parkes_2008,Zhang09:Policy}. However, these {\em
+  incentive} based approaches in their current form are not
+sufficiently flexible. In fact, as one of our experimental domains
+demonstrates (see Section~\ref{sec: experiments}), there exist
+environments where certain behaviours can not be enforced by the
+method of Zhang \emph{et al}.
 
 In this paper we explicitly focus on the implications of allowing the
 interested party (teacher, in our model) to modify the \emph{dynamics}
@@ -84,16 +89,38 @@ do, in this case, is to {\em modify the dynamics} -- add safety wheels
 to the bicycle. Gradually raising the safety wheels constitutes {\em
   behaviour cultivation}. It ultimately allows the child to accustom
 to the complete range of motion possibilities and, eventually, ride an
-unabridged bicycle version.
+unabridged bicycle version. Another good example, this time with
+multiple agents, would be the task a coach faces when introducing a
+new player into his football team. The new player has to be accustomed
+to this team's play-book (a set of attack and defence plans), but also
+the rest of team has to be trained to incorporate the unique set of
+skills brought in by the new player. Here too, neither {\em
+  demonstration} nor {\em incentives} work very well. Rather, the
+coach has to create a sequence of drills where the new player's skills
+and the old play-book will be gradually integrated. These drills do
+not possess the complete complexity and dynamics of the real football
+game, instead they gradually approximate the real game dynamics, and
+constitute {\em behaviour cultivation}. Ultimately, a full scale
+football match is played, where the coach no longer influences the
+game rules or dynamics.
 
 The contributions of this work are three-fold:
 \begin{itemize}
-\item We introduce a model whereby a teacher can modify or tweak environment dynamics so as to cultivate some desired behaviour in a learning agent.
-\item We introduce a  cost function for the teacher that
-naturally incorporates and balances the teacher's
-effort and the deviation of the learner's performance from an ideal
-reference, that which the teacher is interested in.
-\item We instantiate our model with a particular learning agent, and then show, empirically, that our model  is effective.
+\item We introduce a model whereby a teacher can modify or tweak
+  environment dynamics so as to cultivate some desired behaviour in a
+  learning agent. This is the first time the {\em behaviour
+    cultivation} teaching method is considered explicitly.
+\item We introduce a cost function for the teacher that naturally
+  incorporates and balances the teacher's effort and the deviation of
+  the learner's performance from an ideal reference, that which the
+  teacher is interested in. Such balance is an important feature for
+  multi-aspect optimisation, and otherwise would have necessitated a
+  separate treatment.
+\item We instantiate our model with a particular learning agent, and
+  then show, empirically, that our model is effective. Our {\em
+    behaviour cultivation} method was able both to speed up a normal
+  learning process and solve teaching tasks which are hard or
+  impossible for other methods.
 \end{itemize}
 
 %To achieve this goal, we first introduce a way to measure the
