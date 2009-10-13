@@ -90,18 +90,18 @@ leads to the following set of equations: %\\\ \\
 \item[Policy evaluation:]
 %{\em Policy evaluation:}\\
 %\centerline{
-  \[V_t(s)=\sum\limits_{s'}T_{u_t}(s'|s,\pi_{t-1}(s))\left[
+\[\hspace{-20pt}V_t(s)=\sum\limits_{s'}T_{u_t}(s'|s,\pi_{t-1}(s))\left[
     c(s',\pi_{t-1}(s),s)+\gamma V_t(s')
     \right]\]
     %}
 
 \item[Policy improvement:]
-\[\pi_t(a|s)=\frac{1}{Z_t(s)}\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
+\[\hspace{-20pt}\pi_t(a|s)=\frac{1}{Z_t(s)}\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
     c(s',a,s)+\gamma V_t(s')
     \right]\right) \]
     
 \item[Normalisation factor:]
-\[Z_t(s)=\sum\limits_a\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
+\[\hspace{-20pt}Z_t(s)=\sum\limits_a\exp\left(\tau_t\sum\limits_{s'}T_{u_t}(s'|s,a)\left[
     c(s',a,s)+\gamma V_t(s') \right]\right)\]
 \end{description}
     
