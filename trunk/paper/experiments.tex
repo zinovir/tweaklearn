@@ -1,16 +1,24 @@
 \section{Experimental Demonstration}\label{sec: experiments}
 The environment that the learning agent is facing in our experiments
-is based on a type of transportation domain. Specifically, consider a
-learner agent that is tasked with finding an optimal path for supply
-transportation between point $S$ and $T$ on a grid. The learner's
-reward is initially fixed to be $-1$ for every step it takes plus some
-values $R_{ST}$ and $R_{TS}$ for reaching point T from S and vice
-versa. In a uniform grid this would be a simple problem, however, the
-grid simulates a terrain and cells have an associated elevation.  As a
-result, any movement from one cell to another neighbouring cell
-succeeds with a probability proportional to the relative elevation of
-the cells. Consider, for instance, the situation depicted in
-Figure~\ref{exp_motion}.
+is based on a type of transportation domain that in its general form
+can represent a wide range of practical tasks from a real
+transportation route planning to the manipulator motion planning for a
+robot. To better demonstrate the properties and the performance of our
+teaching method, rather than to deal with various intricacies of the
+domain, we concentrate on a discrete version of the
+task. Specifically, consider a learner agent that is tasked with
+finding an optimal path for supply transportation between point $S$
+and $T$ on a grid. The learner's reward is initially fixed to be $-1$
+for every step it takes plus some values $R_{ST}$ and $R_{TS}$ for
+reaching point T from S and vice versa. In a uniform grid this would
+be a simple problem, however, the grid simulates a terrain and cells
+have an associated elevation.  As a result, any movement from one cell
+to another neighbouring cell succeeds with a probability proportional
+to the relative elevation of the cells. This way we can, for example,
+simulate and model the resistance presented by a real rugged or
+mountain terrain to the efforts of a robot that attempts to traverse
+it. From this point of view, consider, for instance, the situation
+depicted in Figure~\ref{exp_motion}.
 
 \begin{figure}[ht]
 \centerline{\psfig{file=img/exp_motion.eps,width=5cm}}
@@ -24,11 +32,14 @@ the motion is lower than the target cell, then the motion succeeds
 with low probability. Furthermore, in this case, a non-zero
 probability exists that the direction of motion will be
 altered. E.g. moving from $H$ to $E$ is unlikely to succeed, and the
-agent may end up in $D$, $F$ or even $G$. If the motion is directed to
-lower the elevation, it is most likely will succeed, but it also has a
-certain non-negligible probability to move further than
-intended. E.g. moving from $B$ to $E$ is quite likely to succeed, but
-the agent may end up in $H$ or $G$ just as well.
+agent may end up in $D$, $F$ or even $G$, thus representing a robot
+``stumbling'' or ``slipping'' while trying to climb a steeply inclined
+slope. If the motion is directed to lower the elevation, it is most
+likely will succeed, but it also has a certain non-negligible
+probability to move further than intended. E.g. moving from $B$ to $E$
+is quite likely to succeed, but the agent may end up in $H$ or $G$
+just as well, which would also be consistent with a real motion on a
+steep mountain slope.
 
 As a result of this non-uniform, and potentially even non-linear,
 response to actions, such an environment can create complex
@@ -159,4 +170,6 @@ Iteration algorithm. We have confirmed the efficacy of our method in
 the situation where the teacher's interest contradicts, or otherwise
 interferes, with the interests of the learner by requiring to
 cultivate a behaviour significantly different from that which is
-optimal under the passive environment dynamics.
+optimal under the passive environment dynamics. Importantly, we have
+constructed a teacher-learner task that can not be addressed by other
+available teaching methods.

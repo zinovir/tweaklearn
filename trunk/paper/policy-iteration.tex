@@ -2,8 +2,14 @@
 \section{TOP with Policy Iteration}\label{sec: TOP-PI}
 
 In this section we discuss how we instantiate our general model when
-the learner is using a \emph{policy iteration} algorithm.  The
-standard policy iteration (PI) algorithm is an iterative algorithm
+the learner is using a \emph{policy iteration} algorithm.  As we have
+described in the previous section, the framework instantiation process
+has two stages. We first identify the sufficient set of variables to
+describe the computation state of the learning algorithm. We then
+represent the algorithm's iteration that transforms this state in a
+functional form.
+
+Now, the standard policy iteration (PI) algorithm is an iterative algorithm
 that operates over an explicitly given MDP\cite{puterman_book_94}.  It
 consists of two principal stages:
 \begin{description}
@@ -50,33 +56,33 @@ by making the basic PI method our study subject in this paper, we
 intend to impact a large swathe of applications where these learning
 techniques are used in a teacher-learner (or leader-follower) setup.
 
-
 In more detail, we consider the standard PI algorithm, where the
 environment model is completely known and the value function is
 directly computed. However, for the reasons of computational
 convenience, we do introduce a modification into the policy
 improvement stage. Namely, the new policy is computed as a
-soft-maximisation with respect to the value function. The soft-max
-function we use is that of Gibbs-Boltzmann, where a vector
-$\mathbf{v}=(v_1,...,v_k)$ is transformed into a normalised vector
-$\sigma(\mathbf{v}|\tau)$ proportional to $(\exp(\tau
-v_1),...,\exp(\tau v_k))$. The parameter $\tau_t$ denotes a so called
-{\em temperature} scale that shifts the soft-max towards the greedy
-maximum selection, i.e. if we let
+soft-maximisation with respect to the value function. This is done to
+support differentiability of the policy with respect to the
+environment dynamics necessary for numerical calculations to solve the
+resulting TOP. However, this modification is relatively standard for
+PI algorithms (see, for example~\cite{perkins_precup_2003} and
+references therein). This is in part due to the fact that PI is
+frequently used in combination with a form of neural-network
+computation to represent either the policy or the value function, and
+in such representations soft-max occurs naturally (see
+e.g.~\cite{bertsekas_tsitsiklis_book_96}). The soft-max function we
+use is that of Gibbs-Boltzmann, which is extensively used in
+neural-network computations, where a vector $\mathbf{v}=(v_1,...,v_k)$
+is transformed into a normalised vector $\sigma(\mathbf{v}|\tau)$
+proportional to $(\exp(\tau v_1),...,\exp(\tau v_k))$. The parameter
+$\tau_t$ denotes a so called {\em temperature} scale that shifts the
+soft-max towards the greedy maximum selection, i.e. if we let
 \[
 \lim\limits_{\tau\rightarrow\infty}\sigma(\mathbf{v}|\tau)=\sigma^*,
 \]
 then 
 \[\sigma^*_j\neq 0 \mbox{ iff } j\in\arg\max\limits_{1\leq i\leq k}v_i.\]
 
-This is done to support differentiability of the policy with respect
-to the environment dynamics, and is a standard modification to the PI
-algorithm (see, for example~\cite{perkins_precup_2003} and references
-therin).  This is in part due to the fact that PI is frequently used
-in combination with a form of neural-network computation to represent
-either the policy or the value function, and in such representations
-soft-max occurs naturally (see
-e.g.~\cite{bertsekas_tsitsiklis_book_96}).
 
 Formally instantiating our learner's state update $F(x_t,u)$ by PI
 leads to the following set of equations: %\\\ \\

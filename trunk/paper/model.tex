@@ -8,15 +8,17 @@ In this section we provide a high level description of the problem and
 general framework.  In the next section we provide a particular
 instantiation of our framework.
 
-Our framework consists of a stochastic environment and two agents, a
-\emph{learner} and a \emph{teacher}.  The learner acts within the
-environment, taking actions and receiving feedback in the form of
-rewards, which depend on the action taken and the current state of the
-environment in which the agent finds itself.  We assume that the
-learner is rational and thus attempts to find a \emph{policy} which
-describes what action to take in each environment state, so as to
-maximises its expected reward.  The teacher, on the other hand, does
-not act \emph{in} the environment, but rather acts \emph{on} the
+For easier exposition we will present our framework to consist of a
+stochastic environment and two agents, a \emph{learner} and a
+\emph{teacher}, however, our formalism can be easily modified to
+include an arbitrary fixed number of learning agent. The learner acts
+within the environment, taking actions and receiving feedback in the
+form of rewards, which depend on the action taken and the current
+state of the environment in which the agent finds itself.  We assume
+that the learner is rational and thus attempts to find a \emph{policy}
+which describes what action to take in each environment state, so as
+to maximises its expected reward.  The teacher, on the other hand,
+does not act \emph{in} the environment, but rather acts \emph{on} the
 environment.  In particular, the teacher has some desired
 \emph{reference policy}, $\pi^*$, that it wishes the learner to
 follow, but is unable to directly force the agent to take any
@@ -24,8 +26,11 @@ particular action.  Instead, it it is able to modify the environment's
 \emph{dynamics} in order to cultivate the desired behaviour in the
 learner.  That is, the teacher's actions are able to influence the way
 the environment state changes in response to the learner's actions,
-and thus influence the policy of the learner. Dynamics modifications,
-or \emph{tweaks}, come at a cost, however, and thus the goal of the
+and thus influence the policy of the learner. This influence can range
+from minor effects on the transition probability in a single
+environment state to a principal change of the environment response
+across all states and learner's actions. Dynamics modifications, or
+\emph{tweaks}, come at a cost, however, and thus the goal of the
 teacher is to minimise the modifications it must make to the
 environment dynamics while at the same time ensuring that the policy
 followed by the learner is close enough to the desired reference
@@ -139,7 +144,8 @@ how far the teacher is from its goal). While any function which
 combines these features in a meaningful way would work, in this paper
 we adopt a specific cost function derived from the
 \emph{Kullback-Leibler Divergence Rate}.  We describe our proposed
-cost function in more detail in the next section.
+cost function and the reason behind our cost function choice in more
+detail in the next section.
 
 
 
@@ -240,10 +246,20 @@ Notice that this formulation retains complete flexibility with respect
 to the specific algorithm selected by the learner to optimise its
 policy. Nevertheless, to provide further intuition and demonstrate the
 feasibility of the approach, in the rest of this paper we instantiate
-the algorithm $F$ to be the Policy Iteration algorithm. However,
-before proceeding to this particular instantiation, we would like to
-remark upon the meaning of the use of KLR and KL Divergence in our
-teaching problem.
+the algorithm $F$ to be the Policy Iteration (PI) algorithm. As would
+occur with any other learning algorithm, we will identify $x_t$ with a
+set of variables sufficient to capture the learner's computation state
+at iteration $t$. We then will represent the change in the computation
+state that occurs between two sequential iterations of the algorithm in
+a functional form, $F$. The choice of PI is, therefore, not dictated
+by its particularly convenient properties, but rather by the number of
+applications it has been used in. As we discuss in the next section,
+by using PI as our example instantiation of TOP we intend to speed up the 
+dissemination and utilisation of our {\em behaviour cultivation}
+teaching method to practical applications. However, before proceeding
+to this particular instantiation of TOP to PI, we would like to remark
+upon the meaning of the use of KLR and KL Divergence in our teaching
+problem.
 
 %%%%%%%%%%%%%%%%%
 \begin{figure}[ht]
@@ -269,21 +285,21 @@ $Q$.\footnote{Note that while KL Divergence is often called the
   true distance metric.}  As expected, $D^{KL}(P||Q)$ is minimised
 exactly when $P=Q$, that is, $D^{KL}(P||P)=0$. Importantly, it
 compares two distributions, rather than distribution properties, such
-as the mean or variance which are commonly used~\footnote{Consider,
-  for instance, the optimality criteria of MDPs: the {\em expected}
-  accumulated reward. Rather than being concerned with the entire
-  shape of the obtainable reward distribution, it only concentrates on the
-  expectation, necessitating further solution augmentation to account
-  for requirements such as risk-aversion.}. In our problem, the
-desired distribution is $P^*(s',a'|s,a)$ which arises if the learner
-follows the teacher's desired policy with no environmental tweaks
-required.  By using KLR as the cost function, we are able to assign
-costs to the complete variety of possible long term deviations caused
-by departing from the ideal probability of state-action pair
-transition.  These deviations may arise from either the environmental
-tweak made by the teacher, or by the learner following a non-desired
-policy, or some combination of both, and thus our cost function
-balances these appropriately.
+as the mean or variance which, for historical reasons, have been more commonly
+used~\footnote{Consider, for instance, the optimality criteria of
+  MDPs: the {\em expected} accumulated reward. Rather than being
+  concerned with the entire shape of the obtainable reward
+  distribution, it only concentrates on the expectation, necessitating
+  further solution augmentation to account for requirements such as
+  risk-aversion.}. In our problem, the desired distribution is
+$P^*(s',a'|s,a)$ which arises if the learner follows the teacher's
+desired policy with no environmental tweaks required.  By using KLR as
+the cost function, we are able to assign costs to the complete variety
+of possible long term deviations caused by departing from the ideal
+probability of state-action pair transition.  These deviations may
+arise from either the environmental tweak made by the teacher, or by
+the learner following a non-desired policy, or some combination of
+both, and thus our cost function balances these appropriately.
 
 %Originally, $KL$ divergence (and KRL) was designed to measure the cost
 %of mistaken encoding. That is, if a signal had come from a
