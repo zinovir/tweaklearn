@@ -1,21 +1,24 @@
 
 \section{TOP with Policy Iteration}\label{sec: TOP-PI}
 
-In this section we discuss how we instantiate our general model so that the learner is using a \emph{policy iteration} algorithm.
-The standard policy iteration (PI) algorithm is an iterative algorithm
-that operates over an explicitly given MDP\cite{puterman_book_94}.  It consists of two principal stages:
+In this section we discuss how we instantiate our general model when
+the learner is using a \emph{policy iteration} algorithm.  The
+standard policy iteration (PI) algorithm is an iterative algorithm
+that operates over an explicitly given MDP\cite{puterman_book_94}.  It
+consists of two principal stages:
 \begin{description}
-\item[Policy Evaluation] where the algorithm computes the reward of the agent if it applies its current policy in the given MDP. Specifically,
-given the policy of the previous iteration, $\pi_{t-1}$, the value
-function $V_t(s)$ for that policy is computed, where $V_t(s)$
-represents the expected total discounted reward that can be achieved
-if the environment starts at state $s$ and the agent follows
-$\pi_{t-1}$.
+\item[Policy Evaluation] where the algorithm computes the reward of
+  the agent if it applies its current policy in the given
+  MDP. Specifically, given the policy of the previous iteration,
+  $\pi_{t-1}$, the value function $V_t(s)$ for that policy is
+  computed, where $V_t(s)$ represents the expected total discounted
+  reward that can be achieved if the environment starts at state $s$
+  and the agent follows $\pi_{t-1}$.
 
 \item[Policy Improvement]  where the value function
 of the current policy is used to guide the computation of the next
 stage policy. Commonly, it is a policy, $\pi_{t}$, optimal with
-respect to the currect value function, $V_t(s)$.
+respect to the current value function, $V_t(s)$.
 \end{description}
 
 %and
@@ -32,17 +35,20 @@ respect to the currect value function, $V_t(s)$.
 %respect to the currect value function, $V_t(s)$.
 
 Since its original introduction, both stages of the algorithm have
-been refined to allow for partial knowledge of the domain.
- For instance, the value function can be
-estimated, rather than computed, in environments where a direct
-computation is too complex or impossible due to poor modelling by the
-learner[REFS]. Another  extension has been the  introduction of safety features
-into the calculations of the new policy (e.g risk aversion)[REFS]. Such
+been refined to allow for partial knowledge of the domain.  For
+instance, the value function can be estimated, rather than computed,
+in environments where a direct computation is too complex or
+impossible due to poor modelling by the learner (see
+e.g. ~\cite{vanRoy_98,koller_parr_2000,lagoudakis_parr_2003}). Another
+extension has been the introduction of safety features into the
+calculations of the new policy (e.g risk
+aversion~\cite{howard_metheson_72,marcus_et_al_97,sato_kobayashi_2000}). Such
 modifications have been extensively used, particularly in robotics,
-leading to more and more advanced policy iteration algorithms (see, for example, ~\cite{sugiyama_et_al_2009}). Hence, by making the basic PI method our
-study subject in this paper, we intend to impact a large swathe of
-applications where these learning techniques are used in a
-teacher-learner (or leader-follower) setup.
+leading to more and more advanced policy iteration algorithms (see,
+for example, ~\cite{sugiyama_et_al_2009,lagoudakis_parr_2003}). Hence,
+by making the basic PI method our study subject in this paper, we
+intend to impact a large swathe of applications where these learning
+techniques are used in a teacher-learner (or leader-follower) setup.
 
 
 In more detail, we consider the standard PI algorithm, where the
@@ -52,7 +58,7 @@ convenience, we do introduce a modification into the policy
 improvement stage. Namely, the new policy is computed as a
 soft-maximisation with respect to the value function. The soft-max
 function we use is that of Gibbs-Boltzmann, where a vector
-$\mathbf{v}=(v_1,...,v_k)$ is tranformed into a normalised vector
+$\mathbf{v}=(v_1,...,v_k)$ is transformed into a normalised vector
 $\sigma(\mathbf{v}|\tau)$ proportional to $(\exp(\tau
 v_1),...,\exp(\tau v_k))$. The parameter $\tau_t$ denotes a so called
 {\em temperature} scale that shifts the soft-max towards the greedy
@@ -64,11 +70,13 @@ then
 \[\sigma^*_j\neq 0 \mbox{ iff } j\in\arg\max\limits_{1\leq i\leq k}v_i.\]
 
 This is done to support differentiability of the policy with respect
-to the environment dynamics, and is a standard modification to the PI algorithm (see, for example[REF]).   
-This is due to the fact that PI is frequently used in
-combination with a form of neural-network computation to represent
+to the environment dynamics, and is a standard modification to the PI
+algorithm (see, for example~\cite{perkins_precup_2003} and references
+therin).  This is in part due to the fact that PI is frequently used
+in combination with a form of neural-network computation to represent
 either the policy or the value function, and in such representations
-soft-max occurs naturally[REF].
+soft-max occurs naturally (see
+e.g.~\cite{bertsekas_tsitsiklis_book_96}).
 
 Formally instantiating our learner's state update $F(x_t,u)$ by PI
 leads to the following set of equations: %\\\ \\
