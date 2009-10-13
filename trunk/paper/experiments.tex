@@ -1,6 +1,7 @@
 \section{Experimental Demonstration}\label{sec: experiments}
+
 The environment that the learning agent is facing in our experiments
-is based on a type of transportation domain that in its general form
+is based on a type of transportation domain that, in its general form,
 can represent a wide range of practical tasks from a real
 transportation route planning to the manipulator motion planning for a
 robot. To better demonstrate the properties and the performance of our
@@ -31,28 +32,28 @@ Figure~\ref{exp_motion} is practically certain. If the source cell of
 the motion is lower than the target cell, then the motion succeeds
 with low probability. Furthermore, in this case, a non-zero
 probability exists that the direction of motion will be
-altered. E.g. moving from $H$ to $E$ is unlikely to succeed, and the
+altered. For example moving from $H$ to $E$ is unlikely to succeed, and the
 agent may end up in $D$, $F$ or even $G$, thus representing a robot
 ``stumbling'' or ``slipping'' while trying to climb a steeply inclined
-slope. If the motion is directed to lower the elevation, it is most
+slope. If the motion is directed to states at lower elevation, it is most
 likely will succeed, but it also has a certain non-negligible
-probability to move further than intended. E.g. moving from $B$ to $E$
+probability to move further than intended. For example,  moving from $B$ to $E$
 is quite likely to succeed, but the agent may end up in $H$ or $G$
-just as well, which would also be consistent with a real motion on a
+just as well, which would also be consistent with  real motion on a
 steep mountain slope.
 
 As a result of this non-uniform, and potentially even non-linear,
 response to actions, such an environment can create complex
-dependencies between motion decision at different locations on the
+dependencies between motion decisions at different locations on the
 grid. Finding an optimal path of motion from $S$ to $T$ and back,
 therefore, becomes non-trivial. Still, if the probabilities of
 different transitions are given, the policy iteration algorithm can
-comfortably well solve the problem. However, the time it takes the
+solve the problem. However, the time it takes the
 algorithm to converge to an optimal policy may vary depending on how
-prominent are the features of the terrain. Therefore it would be
+prominent the features of the terrain are. Therefore it would be
 reasonable to assume that scaling the terrain (and modifying
 transition probabilities accordingly) during the initial iterations of
-learning, or shaping the landscape to ``push'' the agent in the right
+learning, or shaping the environment to ``push'' the agent in the right
 direction will result in faster convergence to the optimal
 solution. Our experiments are directed to verify this proposition
 using our TOP-PI formalism.  Furthermore, to demonstrate that the
@@ -127,8 +128,8 @@ impression shown in Figure~\ref{newalt}.  Note the lowering of the two
 centre states furthest from the target.  This creates a ``hole'' that
 the learner would wish to avoid as it would be difficult to exit.
 Also, the upper-right centre square is the lowest to discourage the
-learner from moving there should it fall in the hole. In this domain
-with a maximum number of policy iterations for TOP-PI of $4$ the
+learner from moving there should it fall in the hole. In this domain,
+with a maximum number of policy iterations for TOP-PI of $4$, the
 modifications to the dynamics tended to be relatively reasonable, with
 the average change in each entry of the environmental dynamics $T$
 ranging from $0.058$ in the first iteration to $0.036$ in the final
@@ -138,7 +139,7 @@ problem. While in our first experiment the cumulative KLR-based cost
 to the teacher was $2.1495$ units, the distorted policy required
 $7.1685$ units of teaching effort.
 
-However, we reduced the grid size to $2\times 2$ to underline and throw
+We reduced the grid size to $2\times 2$ to underline and throw
 into a sharper relief the fact that this policy modification method
 allows changes that are not possible with modifications to the reward
 function alone. In our test on a $2 \times 2$ grid, we changed the
@@ -168,7 +169,7 @@ method can be used both to speed up the learning process and to lead
 it towards a required strategy by applying our method to the Policy
 Iteration algorithm. We have confirmed the efficacy of our method in
 the situation where the teacher's interest contradicts, or otherwise
-interferes, with the interests of the learner by requiring to
+interferes, with the interests of the learner by requiring it to
 cultivate a behaviour significantly different from that which is
 optimal under the passive environment dynamics. Importantly, we have
 constructed a teacher-learner task that can not be addressed by other
