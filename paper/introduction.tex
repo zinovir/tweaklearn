@@ -123,6 +123,18 @@ The contributions of this work are three-fold:
   impossible for other methods.
 \end{itemize}
 
+It is important to note that our framework is not practically limited
+to the learning agent we instantiated it for, the Policy Iteration
+(PI) algorithm. Rather, we simply would like to increase the immediate
+impact of introducing our framework by connecting it with an already
+widely applicable family of learning algorithm, those based on the
+PI. An extremely popular method of reinforcement
+learning~\cite{sutton_barto_RL}, PI has a multitude of variations to
+address both partial and noisy information about the environment,
+which comprise one of the more practical and well researched family of
+algorithms (see e.g. ~\cite{koller_parr_2000,
+  perkins_precup_2003,vanRoy_98,sato_kobayashi_2000,lagoudakis_parr_2003,sugiyama_et_al_2009}).
+
 %To achieve this goal, we first introduce a way to measure the
 %divergence between the realised and the passive (when no modification
 %is applied by the teacher) environment developments in a Markovian
