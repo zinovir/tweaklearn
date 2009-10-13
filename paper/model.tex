@@ -11,13 +11,13 @@ instantiation of our framework.
 For easier exposition we will present our framework to consist of a
 stochastic environment and two agents, a \emph{learner} and a
 \emph{teacher}, however, our formalism can be easily modified to
-include an arbitrary fixed number of learning agent. The learner acts
+include an arbitrary fixed number of learning agents. The learner acts
 within the environment, taking actions and receiving feedback in the
 form of rewards, which depend on the action taken and the current
 state of the environment in which the agent finds itself.  We assume
 that the learner is rational and thus attempts to find a \emph{policy}
 which describes what action to take in each environment state, so as
-to maximises its expected reward.  The teacher, on the other hand,
+to maximise its expected reward.  The teacher, on the other hand,
 does not act \emph{in} the environment, but rather acts \emph{on} the
 environment.  In particular, the teacher has some desired
 \emph{reference policy}, $\pi^*$, that it wishes the learner to
@@ -286,12 +286,12 @@ $Q$.\footnote{Note that while KL Divergence is often called the
 exactly when $P=Q$, that is, $D^{KL}(P||P)=0$. Importantly, it
 compares two distributions, rather than distribution properties, such
 as the mean or variance which, for historical reasons, have been more commonly
-used~\footnote{Consider, for instance, the optimality criteria of
+used.\footnote{Consider, for instance, the optimality criteria of
   MDPs: the {\em expected} accumulated reward. Rather than being
   concerned with the entire shape of the obtainable reward
   distribution, it only concentrates on the expectation, necessitating
   further solution augmentation to account for requirements such as
-  risk-aversion.}. In our problem, the desired distribution is
+  risk-aversion.}  In our problem, the desired distribution is
 $P^*(s',a'|s,a)$ which arises if the learner follows the teacher's
 desired policy with no environmental tweaks required.  By using KLR as
 the cost function, we are able to assign costs to the complete variety
