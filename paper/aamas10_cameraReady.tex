@@ -1,0 +1,83 @@
+\documentclass{aamas2010_cameraReady}
+
+%\usepackage{times}
+\usepackage{latexsym}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{algorithmic}
+\usepackage{subfigure}
+
+
+
+\newtheorem{Theorem}{Theorem}
+\newtheorem{Lemma}{Lemma}
+\newtheorem{Example}{Example}
+\newtheorem{Corollary}{Corollary}
+\newtheorem{Definition}{Definition}
+\newtheorem{assume}{Assumption}
+\newtheorem{Proposition}{Proposition}
+\newtheorem{Hypothesis}{Hypothesis}
+
+
+\special{papersize=8.5in,11in}
+
+\pdfpagewidth=8.5truein
+\pdfpageheight=11truein
+
+\begin{document}
+
+\AuthorsForCitationInfo{Z. Rabinovich, L. Dufton, K. Larson and N. R. Jennings}
+
+\TitleForCitationInfo{Cultivating Desired Behaviour}%: Policy Teaching Via Environment-Dynamics Tweaks}
+
+
+\title{Cultivating Desired Behaviour:\\ Policy Teaching Via Environment-Dynamics
+ Tweaks}
+
+
+% AUTHORS
+\def\sharedaffiliation{%
+\end{tabular}
+\begin{tabular}{c}}
+%
+\numberofauthors{4}
+\author{\alignauthor Zinovi Rabinovich$^{\dagger}$\\
+  \email{zr@ecs.soton.ac.uk}
+\alignauthor Lachlan Dufton$^*$\\ 
+  \email{ltdufton@cs.uwaterloo.ca}
+\alignauthor Kate Larson$^*$\\
+  \email{klarson@cs.uwaterloo.ca}
+\and
+\alignauthor Nicholas R. Jennings$^{\dagger}$\\
+  \email{nrj@ecs.soton.ac.uk}
+\sharedaffiliation
+  \affaddr{$^{\dagger}$Electronics and Computer Science, University of Southampton, United Kingdom}\\
+  \affaddr{$^*$Cheriton School of Computer Science, University of Waterloo, Canada}\\
+} 
+%\additionalauthors{}
+%\author{Tracking Number: 398}
+
+
+\maketitle
+
+\input{abstract}
+\category{I.2.6}{Artificial Intelligence}{Learning}
+\category{I.2.8}{Artificial Intelligence}{Problem Solving, Control Methods, and 
+Search}[Control theory]
+\category{I.2.11}{Artificial Intelligence}{Distributed Artificial Intelligence}[
+Multiagent systems]
+\terms{Algorithms}
+\keywords{Teacher-learner, control theory, Kullback-Leibler Rate}
+
+\input{introduction}
+\input{model}
+\input{policy-iteration}
+\input{experiments}
+\input{conclusion}
+
+
+
+\bibliographystyle{plain}
+\bibliography{teacher_em}
+
+\end{document}
