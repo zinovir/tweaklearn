@@ -5,15 +5,15 @@
 %\nocite{ng_russell_2000}
 %\nocite{zhang_parkes_2009_ed}
 %\nocite{dufton_larson_2009}
-
-There are three general teaching paradigms applied by people:
+\noindent There are three general teaching paradigms applied by people:
 teaching by demonstration, teaching by providing incentives, and
 teaching by modifying the underlying environment dynamics.  While the
 first two have been successfully mapped into intelligent agent models,
-to the best of our knowledge, the third one has yet to be
+%to the best of our knowledge, 
+the third one has yet to be
 instantiated.
 
-Teaching by {\em demonstration} has a teacher provide example
+In more depth, teaching by {\em demonstration} has a teacher provide example
 state-to-action mappings in order to show the learner what a good
 policy would be.  This approach has found great success in
 robotics~\cite{argal_etal_2009}. However, most of these works assume
@@ -26,14 +26,17 @@ On the other hand, much of the work involving teaching by using {\em
 initial interests coincide.  In particular, research in this area has
 looked at ways in which a teacher could encourage or convince a
 learner to follow some desired policy by providing rewards or
-punishments.  Recently, Zhang \emph{et al} introduced a general
+punishments.  Recently, for example, Zhang \emph{et al} introduced a general
 framework they call \emph{environment
-  design}~\cite{Zhang09:General}. In environment design an interested
+  design}~\cite{Zhang09:General}. In this,
+%environment design 
+an interested
 party attempts to influence the behaviour of an agent by making
 limited changes to the agent's environment. Although, in general, this
 may include environment dynamics modification, Zhang \emph{et al} have
-concentrated on teaching by incentive. In particular, Zhang \emph{et
-  al} have allowed their interested party to modify the cost function
+concentrated on teaching by incentive. In particular, they 
+%Zhang \emph{et  al} 
+have allowed their interested party to modify the cost function
 of an agent in a linear programming example~\cite{Zhang09:General}, or
 to modify the rewards of an agent acting in an environment modelled as
 a Markov Decision Problem
@@ -102,7 +105,7 @@ constitute {\em behaviour cultivation}. Ultimately, a full scale
 football match is played, where the coach no longer influences the
 game rules or dynamics.
 
-The contributions of this work are three-fold:
+Against this background, the contributions of this work are three-fold:
 \begin{itemize}
 \item We introduce a model whereby a teacher can modify or tweak
   environment dynamics so as to cultivate some desired behaviour in a

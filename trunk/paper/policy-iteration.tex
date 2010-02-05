@@ -1,6 +1,6 @@
 
 \section{TOP with Policy Iteration}\label{sec: TOP-PI}
-
+\noindent 
 In this section we discuss how we instantiate our general model when
 the learner is using a \emph{policy iteration} algorithm.  As we have
 described in the previous section, the framework instantiation process
@@ -136,6 +136,7 @@ $D^{KL}_t(s,a)=\sum\limits_{s',a'}T_{u_t}(s'|a,s)\pi_t(a'|s')\log\frac{T_{u_t}(s
 $q_t(s')=\sum\limits_s\Tilde{T}_{u_t}(s'|s)q_t(s)$\\
 $\Tilde{T}_{u_t}(s'|s)=\sum\limits_aT_{u_t}(s'|s,a)\pi_t(a|s)$\\\ \\
 }\\ \hline \end{tabular}
-\caption{\label{t_opt_PI}TOP-PI: The complete and explicit TOP for the
+\caption{\label{t_opt_PI}TOP-PI: The complete %and explicit 
+TOP for the
   PI learner}
 \end{figure}
