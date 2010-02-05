@@ -1,15 +1,16 @@
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Interaction Model}\label{sec: GeneralModel}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\noindent 
 In this section we provide a high level description of the problem and
 general framework.  In the next section we provide a particular
-instantiation of our framework.
+instantiation of this 
+%our 
+framework.
 
-For easier exposition we will present our framework to consist of a
-stochastic environment and two agents, a \emph{learner} and a
+For easier exposition we will present our framework in terms of 
+%to consist of 
+a stochastic environment and two agents, a \emph{learner} and a
 \emph{teacher}, however, our formalism can be easily modified to
 include an arbitrary fixed number of learning agents. The learner acts
 within the environment, taking actions and receiving feedback in the
@@ -144,13 +145,13 @@ how far the teacher is from its goal). While any function which
 combines these features in a meaningful way would work, in this paper
 we adopt a specific cost function derived from the
 \emph{Kullback-Leibler Divergence Rate}.  We describe our proposed
-cost function and the reason behind our cost function choice in more
+cost function and the reason behind its
+%our cost function 
+choice in more
 detail in the next section.
 
-
-
 \subsection{Teacher's Cost Computation}\label{sec:KLCost}
-
+\noindent
 In this section we describe our cost function, based on the
 Kullback-Leibler Divergence Rate (KL Rate or KLR).  We first provide some
 background material on Kullback-Leibler Divergence (KL Divergence) and
@@ -167,7 +168,7 @@ D^{KL}(p||q)=\sum_i p(i)\log \frac{p(i)}{q(i)}.
 \end{Definition}
 
 \noindent Informally, KL Divergence measures the difference between
-two probability distributions.  KL Rate is an extension of KL
+two probability distributions, while KL Rate extends KL
 Divergence to Markov processes.
 \begin{Definition}
 Let $\{X^1_t\}$ and $\{X^2_t\}$ be Markov Processes.  The
