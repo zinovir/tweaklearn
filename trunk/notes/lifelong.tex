@@ -1,0 +1,139 @@
+\documentclass{article}
+\usepackage{latexsym}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{algorithmic}
+\usepackage{subfigure}
+\usepackage{times}
+
+\newcommand{\ct}{\ensuremath{\mathrm{Cost}(x_t,u_t)}}
+\newcommand{\cmax}{\ensuremath{\mathrm{Cost}(x_{t_{\max}},u_{t_{\max}})}}
+\newcommand{\G}{\ensuremath{G(x_t,x_{t-1},u_t)}}
+\newcommand{\Tu}{\ensuremath{T_{u_t}(s'|a,s)}}
+
+\newtheorem{doubt}{Doubts and Musings}
+
+
+\begin{document}
+
+\section*{Time-limited teaching of a life-long learner}
+
+In this scenario the learner has the opportunity to continue to learn
+after the teaching process terminates. Under these circumstances the
+teacher has to determine what kind of persistent environment
+modification needs to be made at the end of the teaching process. The
+teaching cost, as usual combined from the teaching effort and the
+teaching success, needs to account for how fast and to what limit (if
+at all) the learner may converge at infimum. To account for it we need to add a term, $\phi(x_{t_{\max}}, u_{t_{\max}})$, that denotes the teaching cost induced by a life-long learning process, once the active environment modifications stop. By so doing we obtain the following general form:
+\[
+\min \sum\limits_{t=1}^{t_{\max}}\ct + \phi(x_{t_{\max}}, u_{t_{\max}})
+\]
+\centerline{such that}
+\begin{eqnarray*}
+&x_t=F(x_{t-1},u_t)\\
+\end{eqnarray*}
+
+The key question here is how to formalise $\phi(x,u)$. At time $t\leq
+t_{\max}$ the cost was calculated by posing the question ``how would
+the system progress (compared to the ideal), if {\em both} the
+teaching and learning stopped at that point''. However, the terminal
+cost $\phi(x,u)$ needs to account for potentially unstable development
+of the learner. In particular, if the learner does not converge it
+poses the question of predicting the set of ``knowledge points''
+$x_{t>t_{\max}}$ that the learner will visit, and how they will effect
+teacher's costs. It can still be expressed by a KLR, and for many
+systems calculated or bound (see
+e.g. ~\cite{sun_mehta_2010,do_2003,zuk_2006,vidyasagar_2007}), but we
+also must remember that there are cases where KLR does not
+exist~\cite{shields_93}. Although it is unclear how common such cases
+are in practical, and especially engineering, applications, it is
+necessary to keep in mind the potential need for divergence measures
+approximating KLR (e.g.~\cite{rached_alajaji_campbell_2001}) or
+different from it completely.
+
+Now, a prominent feature in making KLR computationally feasible
+measure is the stationarity of the two compared processes, or the
+process's stabilisation in this sense (aka {\em mixing} property). In
+terms of our learner's progress such a property is produced by a
+learner that is, in fact, capable of finding a (locally)
+learner-optimal policy in a given environment. In turn, be able to
+control the teaching cost of this type of a life-long learner, it is {\em
+  sufficient} (but not {\em necessary}) for the teacher to guarantee
+the following two conditions:
+\begin{itemize}
+\item Exists $x^*$ so that $x^*=F(x^*,u_T)$. That is the learner has a stable knowledge state in the final environment. 
+\item $F$ is a contraction mapping on $B_r(x^*)$, where $r\geq\|x^*-x_{T-1}\|)$. That is the last controlled knowledge point $x_{T-1}$ is in a small sphere around $x^*$, where the learning process strongly converges. 
+\end{itemize}
+
+The finite-time teaching problem of a life-long learner, therefore becomes:
+
+\[
+\min \sum\limits_{t=1}^{t_{\max}}\ct + \widehat{\phi}(x^*, u_{t_{\max}})
+\]
+\centerline{such that}
+\begin{eqnarray*}
+&x_t=F(x_{t-1},u_t)\\
+&x^*=F(x^*,u_{t_{\max}})\\
+&r=\|x_{t_{\max}}-x^*\|\\
+&\forall x,y\in B_r(x^*),\ \ \|F(x,u_{t_{\max}})-F(y,u_{t_{\max}})\|<\|x-y\|\\
+\end{eqnarray*}
+
+\begin{doubt}
+Although it is true that $x^*$ is a convergence point, the rate of
+convergence may be important from the cost's point of
+view. Discrepancy along the convergence path may accumulate to a
+significant amount independent from $x^*$ itself. In this case, the optimisation function becomes again $\phi(x_{t_{\max}}, u_{t_{\max}})$, but with the additional benefit of new constraints, that may focus the search for teacher's solution. Nonetheless, we may consider
+event a stronger requirement:
+$\|F(x,u_{t_{\max}})-F(y,u_{t_{\max}})\|\geq\gamma\|x-y\|$, where
+$\gamma<1$. There are also many other weaker convergence
+characteristics that we can consider, after all exponential collapse
+is a {\em very} strong demand.
+\end{doubt}
+
+\begin{doubt}
+It may not be possible to determine the equilibrium point $x^*$
+efficiently. Nonetheless, if $F$ is sufficiently accomodating we may
+be able to find a bound on large deviations, similarly to what happens
+with large deviations of colouring number. There are also some
+theories concerning the long-term behaviour of time non-homogeneous
+Markov chains, but they are core math, it will take much more effort
+to tie it in with them.
+\end{doubt}
+
+\section*{The case of MDP and PI}
+
+\begin{doubt}
+PI is guaranteed to converges in finite state spaces (and fixed
+environment), simply becuase their is a finite number of policies and
+each step improves. But can we guarantee a convenient,
+i.e. exponential, convergence rate in general? E.g. gradient based
+policy improvement needs to consider that the gradient norm may be too
+large (jumping over the optimal point) or too small (for (almost)
+plateau).
+\end{doubt}
+
+
+Notice, $\mathrm{Cost}$ denotes the teaching cost if both the
+environment and the learner's policy remain fixed ad
+infimum. Therefore, the use of $\mathrm{Cost}$ with $x^*$ and
+$u_{t_{\max}}$ as a measure of life-long cost is consistent, if
+$\mathrm{Cost}(x,u)$ is continuous in $x$.
+
+
+\section*{Optimization Problem}
+\[
+\min \sum_{t=1}^{t_{\max}} \ct
+\]
+such that
+\[
+G(x_t,x_{t-1},u_t)=0
+\]
+where
+\[
+x_t=\{\pi_t(a|s),q_t(s),V_{t}(s),z_t(s)\} \mbox{ and $u_t$ is the perturbation.}
+\]
+
+\bibliography{lifelong}
+\bibliographystyle{plain}
+
+\end{document}
