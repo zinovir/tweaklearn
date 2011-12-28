@@ -82,8 +82,11 @@ The finite-time teaching problem of a life-long learner, therefore becomes:
 Although it is true that $x^*$ is a convergence point, the rate of
 convergence may be important from the cost's point of
 view. Discrepancy along the convergence path may accumulate to a
-significant amount independent from $x^*$ itself. In this case, the optimisation function becomes again $\phi(x_{t_{\max}}, u_{t_{\max}})$, but with the additional benefit of new constraints, that may focus the search for teacher's solution. Nonetheless, we may consider
-event a stronger requirement:
+significant amount independent from $x^*$ itself. In this case, the
+optimisation function becomes again $\phi(x_{t_{\max}},
+u_{t_{\max}})$, but with the additional benefit of new constraints,
+that may focus the search for teacher's solution. Nonetheless, we may
+consider event a stronger requirement:
 $\|F(x,u_{t_{\max}})-F(y,u_{t_{\max}})\|\geq\gamma\|x-y\|$, where
 $\gamma<1$. There are also many other weaker convergence
 characteristics that we can consider, after all exponential collapse
@@ -93,7 +96,7 @@ is a {\em very} strong demand.
 \begin{doubt}
 It may not be possible to determine the equilibrium point $x^*$
 efficiently. Nonetheless, if $F$ is sufficiently accomodating we may
-be able to find a bound on large deviations, similarly to what happens
+be able to find a bound on large deviations (something like the law of large number, e.g.~\cite{liu_liu_94}), similarly to what happens
 with large deviations of colouring number. There are also some
 theories concerning the long-term behaviour of time non-homogeneous
 Markov chains, but they are core math, it will take much more effort
@@ -102,36 +105,57 @@ to tie it in with them.
 
 \section*{The case of MDP and PI}
 
-\begin{doubt}
-PI is guaranteed to converges in finite state spaces (and fixed
-environment), simply becuase their is a finite number of policies and
-each step improves. But can we guarantee a convenient,
-i.e. exponential, convergence rate in general? E.g. gradient based
-policy improvement needs to consider that the gradient norm may be too
-large (jumping over the optimal point) or too small (for (almost)
-plateau).
-\end{doubt}
+PI has good convergence rates even if the value function is
+approximated (see e.g.~\cite{bertsekas_book_adp}. We can also assume
+that it is capable of handling multiple argodic blocks, inferring
+relevance from the initial state distribution. As a result we can drop
+the requirement for the update being a contraction. Furthermore, since
+the environment in the $\phi$ term is fixed, and the learning process
+converges quickly, we can assume that contribution of non-homogeneous
+transitions is negligible. In other words, we can consider $\phi$ as
+the measure of long term discrepancy between the converged learner's
+behaviour and the ideally controlled initial environment. Since this
+is fully consistent with the meaning of
+$\mathrm{Cost}(x^*,u_{t_{\max}})$, we can use this expression in place
+of $\phi$. This leads to the following optimisation problem, where $F$
+denotes the PI update:
 
-
-Notice, $\mathrm{Cost}$ denotes the teaching cost if both the
-environment and the learner's policy remain fixed ad
-infimum. Therefore, the use of $\mathrm{Cost}$ with $x^*$ and
-$u_{t_{\max}}$ as a measure of life-long cost is consistent, if
-$\mathrm{Cost}(x,u)$ is continuous in $x$.
-
-
-\section*{Optimization Problem}
 \[
-\min \sum_{t=1}^{t_{\max}} \ct
+\min \sum\limits_{t=1}^{t_{\max}}\ct + \mathrm{Cost}(x^*, u_{t_{\max}})
 \]
-such that
+\centerline{such that}
+\begin{eqnarray*}
+&x_t=F(x_{t-1},u_t)\\
+&x^*=F(x^*,u_{t_{\max}})\\
+\end{eqnarray*}
+
+We can rewrite as before, and using KKT condition (although I'm not quite locked on this) to reuse to maximum our previous calculations:
+
 \[
-G(x_t,x_{t-1},u_t)=0
+\min \sum_{t=1}^{t_{\max}} \ct + \mathrm{Cost}(x^*, u_{t_{\max}})
 \]
+\centerline{such that}
+\begin{eqnarray*}
+&G(x_t,x_{t-1},u_t)=0\\
+&\frac{\partial}{\partial x}G(x,x,u_{t_{\max}})|_{x=x^*}=0
+\end{eqnarray*}
 where
 \[
 x_t=\{\pi_t(a|s),q_t(s),V_{t}(s),z_t(s)\} \mbox{ and $u_t$ is the perturbation.}
 \]
+
+\begin{doubt}
+There's a nice section of control approaches dedicated to this type of
+problems. That is, move the system through a critical region to
+``safety'', then switch to standard controller to finish stabilisation
+(starting with e.g.~\cite{yanushevsky_91}, but the list is long). The
+choice of ``safe'' region is also part of the problem. So we need to
+decide if we are going to bother with our own solution for the
+discrete case, or go with approximate PI continuous state and plug it
+into one of those control methods. Although I haven't found an
+implementation on-line yet, and the derivatives calculations will
+still be required.
+\end{doubt}
 
 \bibliography{lifelong}
 \bibliographystyle{plain}
