@@ -1,0 +1,84 @@
+\documentclass{article}
+\usepackage{latexsym}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{algorithmic}
+\usepackage{subfigure}
+\usepackage{times}
+
+\begin{document}
+\section*{Generic formulation}
+
+The following notation is adopted:
+\begin{itemize}
+\item Let $x_t\in\mathbf{R}^n$ denote the computational state of a learning
+algorithm $L$ at time $t$. 
+\item Denote, $u_t:W\rightarrow\Delta(A)$ the external environmental input given to the algorithm, and let
+$\omega$ be a distribution over $W$, where $W$ and $A$ are some (metric) spaces. 
+\item Denote $\pi_L:\mathbf{R}^n\times A\rightarrow \Delta(A)$ the choice rule associated with the learning algorithm $L$, where $\Delta(A)$ is the space of all distributions over $A$.
+\end{itemize}
+
+We can describe the learning algorithm as a function
+$L:\mathbf{R}^n\times A\times W\rightarrow \mathbf{R}^n$, and the
+learning process as an equation of random motion
+$x_{t+1}=L(x_t,a,w)$, where $w\sim\omega$ and $a\sim u_t(w)$. 
+
+We assume that $L$ is self-stabilising for any fixed
+$u$, that is exists $x^*\in\mathbf{R}^n$ so that $x^*\leftarrow
+L(x_t,u(w_t),w_t)$ almost surely. We define $x^*=x^*[u]$ to be a stable state of $L$ given $u$. In addition, $u$ is (strongly) consistent if for all $a\in A$ holds $u=\lim\limits_{x_t\rightarrow x^*[u]}\pi_L(x_t,a)$.
+
+Let $f:\mathbf{R}^n\rightarrow\mathbf{R}$ be a cost function. Let $u^*=\arg\min\limits f(x^*[u])$. If $u^*$ is consistent, then the following heuristic for a control signal $u_t$ can be formulated:
+$$
+u_t(w,a)=1 \iff a = \arg\min\limits_{a\in A} d(\pi_L(x_t,a),u(w)),
+$$
+where $d:\Delta(A)\times\Delta(A)\rightarrow\mathbf{R}$ is some divergence mesure.
+
+\section*{Example of a Sender for a Bandit-solving Receiver}
+Consider the following interaction between a Nature, a Receiver, and a
+set of $N$ experts. We term the expert $N$ a Sender. The Nature
+samples $w\in \omega(W)$. Each expert observes $w$ and selects selects
+some $a^i\in A=\{e_1,...,e_{N-1}\}$ by sampling from $u^i(w)$, where
+$u^i:W\rightarrow\Delta(A)$ is a fixed function. The Receiver selects
+$i\in[1:N]$, and applies $a^i$. The Receiver then incurrs cost
+$f^r(w,a^i)\in\mathbf{R}$, and the Sender incurrs cost $f^s(w,a^i)\in\mathbf{R}$. Both the Receiver and the Sender wish to to minimise their expected accumulated cost. Hence, the Reciever needs to choose experts smartly, and the Sender needs to {\em pre-set} his advice function $u^N$ intelligently. 
+
+Consider a Reciever that behaves according to an algorithm
+$L=SoftMax$. The computational state of the algorithm can be denoted
+by a tupple $x_t=(l_1,...,l_N,1/t)$, where $l_i$ is the current cost
+average experienced by using advice of expert $i$, and $t$ is the time
+step. Then SoftMax selects the action of expert $i$ with probability
+proportional to $\exp(-\tau l_i)$, where $\tau$ is some constant
+coefficient.
+
+Assume that all experts but the Sender always advise the same
+action. Specifically, $u^i(w,a)=1 \iff a=e_i$ for all $i<N$. Notice,
+that since all but one experts are constant, the distribution over
+action engendered by SoftMax can be represented in the form
+$\pi_{SoftMax}(w,a^N)$. Under these assumptions, $L=SoftMax$ is a self-stabilising algorithm as above, and the heuristic can be applicable. 
+
+
+The stable state for $L=SoftMax$ has form $x^*=(l_1^*,...,l_N^*,0)$, where $l_i^*$ is the expected cost of using advice of expert $i$. That is 
+$$
+l_i^*=\sum\limits_{a\in A}\sum\limits_{w\in W}f^r(w,a)u^i(a|w)\omega(w)
+$$ Notice, that for all $i<N$, $l_i^*$ is constant wrt $u^N$, and therefore can be omitted from $x^*$.
+
+Let $\rho(u^N|l_N)=\sum\limits_{a\in A}\sum\limits_{w\in W}\sum\limits_{a^N\in A}
+f^s(w,a)\pi_{SoftMax}(a|l_1^*,...,l_{N-1}^*,l_N,a^N)u^i(a^N|w)\omega(w)$. Then the optimisation over all consistent $u^N$ takes the form:
+
+\begin{eqnarray*}
+&l_N^*,u^{N,*}=\arg\max\limits_{l_N,u^N}\rho(u^N|l_N)\\
+\displaystyle{such that}\\
+l_N=\sum\limits_{a\in A}\sum\limits_{w\in W}f^r(w,a)u^N(a|w)\omega(w)
+\end{eqnarray*}
+
+
+Assume that a manipulative agent, Sender, can select function $u_N$, and wishes to find $u_N=\arg\min $
+
+
+
+options $L_1,...,L_N$
+
+an agent that selects from a set of options $O=\{o_0,...,o_n\}$, where $o_i:W\rightarrow A$ are functions of form unknown to the agent. The agent seeks to find $o^*=\arg\min_{o\in O} $, so as to minimise $\sum u^r(o^*(w_t),w_t)-\min_{o\in O} $
+
+
+\end{document}
