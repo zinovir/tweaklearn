@@ -31,6 +31,10 @@ class UserBase:
     def next(self):
         return 0
 
+    # This function return the next choice distribution of the expert
+    def next_d(self,state):
+        return array([0])
+
     # This function updates internal data, based on the user's choice
     def update(self,info):
         pass
@@ -107,13 +111,20 @@ class UserExp3(UserBase):
         #self.advice = observation
         #pass
 
+    # This function returns the next choice distribution
+    def next_d(self,state):
+        if(len(state)==0):
+            state = array(self.w)
+        # Compute the weighted distribution of experts
+        a_tmp = array(state)
+        p_expert = (1.0-self.gamma)*a_tmp/a_tmp.sum()+\
+                        self.gamma/self.n_experts
+        return p_expert
+
     # This function returns the next choice of the expert
     def next(self):
         # Compute the weighted distribution of experts
-        a_tmp = array(self.w)
-        #pow(array(self.w),1/(self.counter+1))
-        self.p_expert = (1.0-self.gamma)*a_tmp/a_tmp.sum()+\
-                        self.gamma/self.n_experts
+        self.p_expert = self.next_d(self.w)
         # Draw an expert due to above distro
         choice = argmax(random.multinomial(1,self.p_expert))
         # Return the expert -- this is the choice that the user makes
@@ -179,13 +190,22 @@ class UserSoftMax(UserBase):
         self.w = array([1.0]*self.n_experts)
         self.counter = array([1.0]*self.n_experts)
 
+    def next_d(self,state):
+        if(len(state)==0):
+            state = array(self.w)
+        a_tmp = exp(-self.eta*state/self.counter)
+        #pow(array(self.w),1/(self.counter+1))
+        # The following is a mixture SoftMax + Exp3
+        #p_expert = (1.0-self.gamma)*a_tmp/a_tmp.sum()+\
+        #                self.gamma/self.n_experts
+        # The following is pure SoftMax
+        p_expert = a_tmp/a_tmp.sum()
+        return p_expert
+
     # This function returns the next choice of the expert
     def next(self):
         # Compute the weighted distribution of experts
-        a_tmp = exp(-self.eta*self.w/self.counter)
-        #pow(array(self.w),1/(self.counter+1))
-        self.p_expert = (1.0-self.gamma)*a_tmp/a_tmp.sum()+\
-                        self.gamma/self.n_experts
+        self.p_expert = self.next_d(self.w)
         # Draw an expert due to above distro
         choice = argmax(random.multinomial(1,self.p_expert))
         # Return the expert -- this is the choice that the user makes
@@ -233,13 +253,23 @@ class UserEGreedy(UserBase):
         self.w = array([0.0]*self.n_experts)
         self.counter = array([1.0]*self.n_experts)
 
+    def next_d(self,state):
+        if(len(state)==0):
+            state = array(self.w)
+        p_expert = array([self.epsilon/self.n_experts]*self.n_experts)
+        a_tmp = state/self.counter
+        idx_best = argmin(a_tmp)
+        p_expert[idx_best]=p_expert[idx_best]+(1.0-self.epsilon)
+        return p_expert
+
     # This function returns the next choice of the expert
     def next(self):
         # Compute the weighted distribution of experts
-        self.p_expert = array([self.epsilon/self.n_experts]*self.n_experts)
-        a_tmp = self.w/self.counter
-        idx_best = argmin(a_tmp)
-        self.p_expert[idx_best]=self.p_expert[idx_best]+(1.0-self.epsilon)
+        # self.p_expert = array([self.epsilon/self.n_experts]*self.n_experts)
+        # a_tmp = self.w/self.counter
+        # idx_best = argmin(a_tmp)
+        # self.p_expert[idx_best]=self.p_expert[idx_best]+(1.0-self.epsilon)
+        self.p_expert = self.next_d(self.w);
 
         # Draw an expert due to above distro
         choice = argmax(random.multinomial(1,self.p_expert))
